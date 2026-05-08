@@ -1286,12 +1286,6 @@ main { flex: 1 0 auto; }
 .prog-card-arrow svg{width:14px;height:14px;stroke:#3a40d6;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
 
 /* ===== DIPLOMA LISTING PAGE ===== */
-.dip-hero{display:grid;grid-template-columns:1fr 1fr;min-height:320px;overflow:hidden;}
-.dip-hero-text{background:linear-gradient(155deg,#1a1f6e 0%,#3a40d6 60%,#5a5fe8 100%);padding:3.5rem 4rem;display:flex;flex-direction:column;justify-content:center;gap:1rem;}
-.dip-hero-title{font-family:'Fraunces',serif;font-size:clamp(2.2rem,5vw,3.4rem);font-weight:900;color:#fff;line-height:1.1;}
-.dip-hero-sub{font-size:.95rem;color:#c0caff;line-height:1.8;max-width:420px;}
-.dip-hero-photo{overflow:hidden;}
-.dip-hero-photo img{width:100%;height:100%;object-fit:cover;}
 .dip-school-section{padding:3rem 5rem;}
 .dip-school-section:nth-child(odd){background:#fff;}
 .dip-school-section:nth-child(even){background:linear-gradient(180deg,#f4f5ff,#eceeff);}
@@ -1404,7 +1398,6 @@ main { flex: 1 0 auto; }
 
 @media(max-width:960px){
   .prog-cards-grid{grid-template-columns:1fr 1fr;}
-  .dip-hero,.idp-hero{grid-template-columns:1fr;}
   .dip-school-section,.idp-why-section,.idp-entry-section,.idp-modules-section,.idp-brochure-section,.idp-cta-section,.idp-info-bar,.prog-landing-section{padding-left:1.5rem;padding-right:1.5rem;}
   .dip-courses-grid{grid-template-columns:1fr;}
   .idp-why-grid{grid-template-columns:repeat(2,1fr);}
@@ -1414,13 +1407,12 @@ main { flex: 1 0 auto; }
 </style>
 
 <!-- HERO -->
-<section class="dip-hero">
-  <div class="dip-hero-text">
-    <h1 class="dip-hero-title">Diploma<br>Programmes</h1>
-    <p class="dip-hero-sub">Diploma programmes offer in-depth academic and practical training across diverse fields &mdash; from healthcare and tourism to business &mdash; equipping students with specialised skills for professional advancement and industry readiness.</p>
-  </div>
-  <div class="dip-hero-photo">
-    <img src="Diploma_Programmes.png" alt="Diploma students across various fields">
+<section class="page-hero">
+  <div class="hero-orb-small a"></div><div class="hero-orb-small b"></div>
+  <div class="page-hero-inner" data-reveal>
+    <a class="breadcrumb"><span>&#127968;</span><a href="index.html">Home</a><span class="sep">&rsaquo;</span><a href="programmes.html">Programmes</a><span class="sep">&rsaquo;</span><span class="current">Diploma</span></a>
+    <h1 class="page-title">Diploma<span class="grad"> Programmes</span></h1>
+    <p class="page-sub">Diploma programmes offer in-depth academic and practical training across diverse fields &mdash; from healthcare and tourism to business &mdash; equipping students with specialised skills for professional advancement and industry readiness.</p>
   </div>
 </section>
 

@@ -1387,7 +1387,7 @@ main { flex: 1 0 auto; }
   gap: 0.6rem;
   margin-bottom: 0.85rem;
 }
-.enr-tnc-link {
+.enr-tnc-link, a.enr-tnc-link {
   color: #3a40d6;
   font-weight: 700;
   text-decoration: underline;
@@ -1844,7 +1844,8 @@ Malaysia.</div>
       <div class="enr-form-row">
         <div class="enr-field">
           <label>Full Name <span>*</span></label>
-          <input type="text" id="fullName" placeholder="e.g. Ahmad bin Abdullah" required>
+          <input type="text" id="fullName" placeholder="e.g. Ahmad bin Abdullah" required oninput="clearFieldError('fullName','name-error')">
+          <span class="enr-field-error" id="name-error"></span>
         </div>
         <div class="enr-field">
           <label>Email Address <span>*</span></label>
@@ -1860,7 +1861,8 @@ Malaysia.</div>
       <div class="enr-form-row">
         <div class="enr-field">
           <label>Phone Number <span>*</span></label>
-          <input type="tel" id="phone" placeholder="e.g. 012-345 6789" required>
+          <input type="tel" id="phone" placeholder="e.g. 012-345 6789" required oninput="clearFieldError('phone','phone-error')">
+          <span class="enr-field-error" id="phone-error"></span>
         </div>
         <div class="enr-field">
           <label>Identification Type <span>*</span></label>
@@ -1878,11 +1880,12 @@ Malaysia.</div>
           </div>
           <p class="enr-id-prompt" id="id-prompt">Please select IC or Passport first.</p>
           <div id="ic-group" style="display:none;">
-            <input type="text" id="icNumber" placeholder="e.g. 990101-14-5678" required disabled>
+            <input type="text" id="icNumber" placeholder="e.g. 990101-14-5678" required disabled oninput="clearFieldError('icNumber','id-number-error')">
           </div>
           <div id="pp-group" style="display:none;">
-            <input type="text" id="passportNumber" placeholder="e.g. A12345678" disabled>
+            <input type="text" id="passportNumber" placeholder="e.g. A12345678" disabled oninput="clearFieldError('passportNumber','id-number-error')">
           </div>
+          <span class="enr-field-error" id="id-number-error"></span>
         </div>
       </div>
 
@@ -2087,7 +2090,8 @@ Malaysia.</div>
         </div>
         <div class="enr-field">
           <label>Date of Birth <span>*</span></label>
-          <input type="date" id="dob" required>
+          <input type="date" id="dob" required oninput="clearFieldError('dob','dob-error')">
+          <span class="enr-field-error" id="dob-error"></span>
         </div>
       </div>
 
@@ -2169,42 +2173,8 @@ Malaysia.</div>
         </div>
         <p style="font-size:0.84rem;color:#4a4f6b;line-height:1.6;">
           Before submitting, please read our
-          <button class="enr-tnc-link" type="button" onclick="toggleTnC(this)" aria-expanded="false">
-            Terms &amp; Conditions
-          </button>.
+          <a class="enr-tnc-link" href="terms-and-conditions.pdf" target="_blank" rel="noopener">Terms &amp; Conditions</a>.
         </p>
-
-        <!-- T&C Panel (hidden until clicked) -->
-        <div class="enr-tnc-panel" id="tnc-panel">
-          <h4>1. Enrolment Enquiry</h4>
-          <p>Submission of this form constitutes an enquiry only and does not guarantee admission to DSH Institute of Technology (DIT). Enrolment is subject to meeting programme entry requirements and the availability of places.</p>
-
-          <h4>2. Accuracy of Information</h4>
-          <p>You declare that all information provided is true, accurate, and complete. Providing false or misleading information may result in rejection of your application or termination of enrolment.</p>
-
-          <h4>3. Personal Data &amp; Privacy</h4>
-          <ul>
-            <li>DIT collects your personal data solely to process your enquiry and communicate regarding your application.</li>
-            <li>Your information will not be sold or disclosed to third parties without your consent, except as required by law.</li>
-            <li>DIT complies with Malaysia's Personal Data Protection Act 2010 (PDPA).</li>
-          </ul>
-
-          <h4>4. Communication Consent</h4>
-          <p>By submitting this form, you consent to DIT contacting you via phone, email, or WhatsApp using the details provided, for the purposes of following up on your enquiry and sharing programme information.</p>
-
-          <h4>5. Fees &amp; Refund Policy</h4>
-          <ul>
-            <li>Tuition fees and payment schedules will be communicated during the official enrolment process.</li>
-            <li>Registration fees paid upon formal enrolment are non-refundable unless otherwise stated in writing by DIT.</li>
-            <li>DIT reserves the right to amend fee structures with reasonable prior notice.</li>
-          </ul>
-
-          <h4>6. Academic Conduct</h4>
-          <p>Upon enrolment, students agree to abide by all academic and institutional policies, including DIT's Student Code of Conduct, attendance requirements, and programme-specific rules.</p>
-
-          <h4>7. Governing Law</h4>
-          <p>These terms are governed by the laws of Malaysia. Any disputes shall be subject to the exclusive jurisdiction of Malaysian courts.</p>
-        </div>
 
         <!-- Agree checkbox -->
         <label class="enr-agree-row">
@@ -2243,144 +2213,200 @@ Malaysia.</div>
 </section>
 
 <script>
-/* ── Email validation ── */
+/* ================================================
+   DSH Institute of Technology — Enquiry Form JS
+   ================================================ */
+
+function validateName(v) {
+  v = v.trim();
+  if (v.length < 3) return 'Name must be at least 3 characters.';
+  if (!/^[A-Za-z\s'\-\.]+$/.test(v))
+    return 'Name should only contain letters, spaces, hyphens, or apostrophes.';
+  if (v.split(/\s+/).filter(Boolean).length < 2)
+    return 'Please enter your full name (first and last name).';
+  return '';
+}
 function validateEmail(v) {
-  return /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/.test(v.trim());
+  if (!/^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/.test(v.trim()))
+    return 'Please enter a valid email (e.g. ahmad@email.com).';
+  return '';
 }
-function clearEmailError() {
-  var f = document.getElementById('email').closest('.enr-field');
-  if (f) f.classList.remove('has-error');
-  document.getElementById('email-error').classList.remove('visible');
+function validatePhone(v) {
+  var c = v.trim().replace(/[\s\-\(\)\+]/g,'');
+  if (!/^(60)?1[0-9]{8,9}$/.test(c))
+    return 'Enter a valid Malaysian mobile number (e.g. 012-345 6789).';
+  return '';
+}
+function validateIC(v) {
+  var c = v.trim().replace(/-/g,'');
+  if (!/^\d{12}$/.test(c))
+    return 'IC (MyKad) must be 12 digits — e.g. 990101-14-5678.';
+  return '';
+}
+function validatePassport(v) {
+  var c = v.trim().toUpperCase();
+  if (!/^[A-Z0-9]{6,12}$/.test(c))
+    return 'Passport must be 6\u201312 alphanumeric characters (e.g. A12345678).';
+  return '';
+}
+function validateDOB(v) {
+  if (!v) return 'Please enter your date of birth.';
+  var d = new Date(v);
+  if (isNaN(d.getTime())) return 'Please enter a valid date.';
+  var today = new Date();
+  var age = today.getFullYear() - d.getFullYear();
+  var mo  = today.getMonth() - d.getMonth();
+  if (mo < 0 || (mo === 0 && today.getDate() < d.getDate())) age--;
+  if (age < 15) return 'Applicant must be at least 15 years old.';
+  if (age > 80) return 'Please enter a valid date of birth.';
+  return '';
 }
 
-/* ── IC / Passport toggle ── */
+var ERR_ICON = '<svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;flex-shrink:0;margin-right:3px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>';
+
+function showFieldError(inputId, errorId, message) {
+  var el  = document.getElementById(inputId);
+  var err = document.getElementById(errorId);
+  if (message) {
+    if (el) el.closest('.enr-field').classList.add('has-error');
+    if (err) { err.innerHTML = ERR_ICON + message; err.classList.add('visible'); }
+    return false;
+  }
+  if (el) el.closest('.enr-field').classList.remove('has-error');
+  if (err) err.classList.remove('visible');
+  return true;
+}
+function clearFieldError(inputId, errorId) {
+  var el  = document.getElementById(inputId);
+  var err = document.getElementById(errorId);
+  if (el)  el.closest('.enr-field').classList.remove('has-error');
+  if (err) err.classList.remove('visible');
+}
+function clearEmailError() { clearFieldError('email','email-error'); }
+
 function selectIdType(type) {
-  document.getElementById('opt-ic').classList.toggle('selected', type === 'ic');
-  document.getElementById('opt-passport').classList.toggle('selected', type === 'passport');
-  document.getElementById('radio-ic').checked = (type === 'ic');
-  document.getElementById('radio-passport').checked = (type === 'passport');
+  document.getElementById('opt-ic').classList.toggle('selected', type==='ic');
+  document.getElementById('opt-passport').classList.toggle('selected', type==='passport');
+  document.getElementById('radio-ic').checked       = (type==='ic');
+  document.getElementById('radio-passport').checked = (type==='passport');
   document.getElementById('id-prompt').classList.remove('visible');
-
-  var icG = document.getElementById('ic-group');
-  var ppG = document.getElementById('pp-group');
+  var icG  = document.getElementById('ic-group');
+  var ppG  = document.getElementById('pp-group');
   var icIn = document.getElementById('icNumber');
   var ppIn = document.getElementById('passportNumber');
-
+  var errEl = document.getElementById('id-number-error');
+  if (errEl) errEl.classList.remove('visible');
   if (type === 'ic') {
-    icG.style.display = 'block'; ppG.style.display = 'none';
-    icIn.disabled = false; icIn.required = true;
-    ppIn.disabled = true; ppIn.required = false; ppIn.value = '';
+    icG.style.display='block'; ppG.style.display='none';
+    icIn.disabled=false; icIn.required=true;
+    ppIn.disabled=true;  ppIn.required=false; ppIn.value='';
     icIn.focus();
   } else {
-    ppG.style.display = 'block'; icG.style.display = 'none';
-    ppIn.disabled = false; ppIn.required = true;
-    icIn.disabled = true; icIn.required = false; icIn.value = '';
+    ppG.style.display='block'; icG.style.display='none';
+    ppIn.disabled=false; ppIn.required=true;
+    icIn.disabled=true;  icIn.required=false; icIn.value='';
     ppIn.focus();
   }
 }
 
-/* ── T&C toggle ── */
-function toggleTnC(btn) {
-  var panel = document.getElementById('tnc-panel');
-  var isOpen = panel.classList.contains('open');
-  panel.classList.toggle('open', !isOpen);
-  btn.setAttribute('aria-expanded', !isOpen);
-  btn.textContent = isOpen ? 'Terms & Conditions' : 'Hide Terms & Conditions';
-}
-
-/* ── Enable submit when checkbox ticked ── */
 function onTncCheck(cb) {
   document.getElementById('submitBtn').disabled = !cb.checked;
 }
 
-/* ── Form submission ── */
+(function(){
+  var s = document.createElement('style');
+  s.textContent = '@keyframes spin{to{transform:rotate(360deg)}}';
+  document.head.appendChild(s);
+})();
+
 function handleSubmit(e) {
   e.preventDefault();
   var ok = true;
 
-  // Email validation
-  var emailEl = document.getElementById('email');
-  if (!validateEmail(emailEl.value)) {
-    emailEl.closest('.enr-field').classList.add('has-error');
-    document.getElementById('email-error').classList.add('visible');
-    emailEl.focus();
-    ok = false;
-  }
+  if (!showFieldError('fullName','name-error',    validateName(document.getElementById('fullName').value)))  ok=false;
+  if (!showFieldError('email',   'email-error',   validateEmail(document.getElementById('email').value)))    ok=false;
+  if (!showFieldError('phone',   'phone-error',   validatePhone(document.getElementById('phone').value)))    ok=false;
 
-  // ID type selected?
   var idChecked = document.querySelector('input[name="idType"]:checked');
   if (!idChecked) {
-    document.getElementById('id-prompt').classList.add('visible');
-    ok = false;
+    document.getElementById('id-prompt').classList.add('visible'); ok=false;
+  } else {
+    document.getElementById('id-prompt').classList.remove('visible');
+    if (idChecked.value==='ic')
+      { if (!showFieldError('icNumber','id-number-error',validateIC(document.getElementById('icNumber').value)))           ok=false; }
+    else
+      { if (!showFieldError('passportNumber','id-number-error',validatePassport(document.getElementById('passportNumber').value))) ok=false; }
   }
 
-  // T&C checked?
-  if (!document.getElementById('tncCheck').checked) {
-    ok = false;
+  if (!showFieldError('dob','dob-error', validateDOB(document.getElementById('dob').value))) ok=false;
+
+  ['nationality','programme','education'].forEach(function(id){
+    var el = document.getElementById(id);
+    if (el && !el.value) { el.closest('.enr-field').classList.add('has-error'); ok=false; }
+    else if (el) el.closest('.enr-field').classList.remove('has-error');
+  });
+
+  if (!document.getElementById('tncCheck').checked) ok=false;
+
+  if (!ok) {
+    var first = document.querySelector('.enr-field.has-error, .enr-field-error.visible, #id-prompt.visible');
+    if (first) first.scrollIntoView({behavior:'smooth',block:'center'});
+    return;
   }
 
-  if (!ok) return;
-
-  var form = document.getElementById('enquiryForm');
-  if (!form.checkValidity()) { form.reportValidity(); return; }
-
-  var btn = document.getElementById('submitBtn');
-  var origHTML = btn.innerHTML;
+  var btn  = document.getElementById('submitBtn');
+  var orig = btn.innerHTML;
   btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;animation:spin 1s linear infinite;"><circle cx="12" cy="12" r="9" stroke-opacity="0.3"/><path d="M12 3a9 9 0 0 1 9 9"/></svg> Submitting…';
   btn.disabled = true;
 
-  var idVal = idChecked.value === 'ic'
-    ? document.getElementById('icNumber').value
-    : document.getElementById('passportNumber').value;
+  var idVal = idChecked
+    ? (idChecked.value==='ic' ? document.getElementById('icNumber').value : document.getElementById('passportNumber').value)
+    : '';
 
   var formData = {
-    name:        document.getElementById('fullName').value,
-    email:       emailEl.value.trim(),
-    phone:       document.getElementById('phone').value,
-    id_type:     idChecked.value.toUpperCase(),
-    id_number:   idVal,
+    name:        document.getElementById('fullName').value.trim(),
+    email:       document.getElementById('email').value.trim(),
+    phone:       document.getElementById('phone').value.trim(),
+    id_type:     idChecked ? idChecked.value.toUpperCase() : '',
+    id_number:   idVal.trim(),
     nationality: document.getElementById('nationality').value,
     dob:         document.getElementById('dob').value,
     programme:   document.getElementById('programme').value,
+    source:      (document.getElementById('source')||{value:''}).value,
     education:   document.getElementById('education').value,
     message:     document.getElementById('message').value,
     _subject:    'New Enrolment Enquiry - DIT',
     _captcha:    'false'
   };
 
-  fetch('https://formsubmit.co/ajax/admissions@dit.edu.my', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-    body: JSON.stringify(formData)
-  }).catch(function() {}).finally(function() {
+  /* ================================================================
+     YOUR PATH TO SUBMIT ENQUIRY GOES HERE
+     Replace 'YOUR_SUBMISSION_ENDPOINT_HERE' with your actual endpoint
+     (e.g. your EMS API URL, backend handler, or form service URL).
+     ================================================================ */
+  var submitUrl = 'YOUR_SUBMISSION_ENDPOINT_HERE';
+
+  fetch(submitUrl, {
+    method:'POST',
+    headers:{'Content-Type':'application/json','Accept':'application/json'},
+    body:JSON.stringify(formData)
+  }).catch(function(){
+    /* Errors ignored until endpoint is configured */
+  }).finally(function(){
     document.getElementById('enr-form-section').classList.add('hidden');
     var success = document.getElementById('enr-final-success');
-    success.classList.remove('hidden');
-    success.style.opacity = '0';
-    success.style.transition = 'opacity 0.6s ease';
-    requestAnimationFrame(function() { requestAnimationFrame(function() {
-      success.style.opacity = '1';
-      window.scrollTo({ top: success.offsetTop - 80, behavior: 'smooth' });
-    }); });
+    if (success) {
+      success.classList.remove('hidden');
+      success.style.opacity='0'; success.style.transition='opacity 0.6s ease';
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){
+        success.style.opacity='1';
+        window.scrollTo({top:success.offsetTop-80,behavior:'smooth'});
+      }); });
+    } else {
+      btn.innerHTML=orig; btn.disabled=false;
+    }
   });
 }
-
-/* Spinner keyframe */
-var style = document.createElement('style');
-style.textContent = '@keyframes spin { to { transform: rotate(360deg); } }';
-document.head.appendChild(style);
-function handleSubmit(e) {
-  e.preventDefault();
-  var form = document.getElementById('enquiryForm');
-
-  // Basic HTML5 validation check
-  if (!form.checkValidity()) {
-    form.reportValidity();
-    return;
-  }
-
-  // Populate summary in declaration panel
-
 </script>
 
 
