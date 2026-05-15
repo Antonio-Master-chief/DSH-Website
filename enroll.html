@@ -2364,47 +2364,49 @@ function handleSubmit(e) {
     : '';
 
   var formData = {
-    name:        document.getElementById('fullName').value.trim(),
-    email:       document.getElementById('email').value.trim(),
-    phone:       document.getElementById('phone').value.trim(),
-    id_type:     idChecked ? idChecked.value.toUpperCase() : '',
-    id_number:   idVal.trim(),
-    nationality: document.getElementById('nationality').value,
-    dob:         document.getElementById('dob').value,
-    programme:   document.getElementById('programme').value,
-    source:      (document.getElementById('source')||{value:''}).value,
-    education:   document.getElementById('education').value,
-    message:     document.getElementById('message').value,
-    _subject:    'New Enrolment Enquiry - DIT',
-    _captcha:    'false'
+    access_key:  'YOUR_WEB3FORMS_ACCESS_KEY',
+    subject:     'New Enrolment Enquiry - DIT',
+    from_name:   document.getElementById('fullName').value.trim(),
+    replyto:     document.getElementById('email').value.trim(),
+    message:
+      'NEW STUDENT ENROLMENT ENQUIRY\n' +
+      '================================\n\n' +
+      'Full Name       : ' + document.getElementById('fullName').value.trim() + '\n' +
+      'Email           : ' + document.getElementById('email').value.trim() + '\n' +
+      'Phone           : ' + document.getElementById('phone').value.trim() + '\n' +
+      'ID Type         : ' + (idChecked ? idChecked.value.toUpperCase() : 'Not provided') + '\n' +
+      'ID Number       : ' + idVal.trim() + '\n' +
+      'Nationality     : ' + document.getElementById('nationality').value + '\n' +
+      'Date of Birth   : ' + document.getElementById('dob').value + '\n' +
+      'Programme       : ' + document.getElementById('programme').value + '\n' +
+      'Education Level : ' + document.getElementById('education').value + '\n' +
+      'Heard about us  : ' + ((document.getElementById('source')||{value:''}).value || 'Not specified') + '\n' +
+      'Message         : ' + (document.getElementById('message').value.trim() || 'None')
   };
 
-  /* ================================================================
-     YOUR PATH TO SUBMIT ENQUIRY GOES HERE
-     Replace 'YOUR_SUBMISSION_ENDPOINT_HERE' with your actual endpoint
-     (e.g. your EMS API URL, backend handler, or form service URL).
-     ================================================================ */
-  var submitUrl = 'YOUR_SUBMISSION_ENDPOINT_HERE';
-
-  fetch(submitUrl, {
+  fetch('https://api.web3forms.com/submit', {
     method:'POST',
     headers:{'Content-Type':'application/json','Accept':'application/json'},
     body:JSON.stringify(formData)
-  }).catch(function(){
-    /* Errors ignored until endpoint is configured */
-  }).finally(function(){
-    document.getElementById('enr-form-section').classList.add('hidden');
-    var success = document.getElementById('enr-final-success');
-    if (success) {
-      success.classList.remove('hidden');
-      success.style.opacity='0'; success.style.transition='opacity 0.6s ease';
-      requestAnimationFrame(function(){ requestAnimationFrame(function(){
-        success.style.opacity='1';
-        window.scrollTo({top:success.offsetTop-80,behavior:'smooth'});
-      }); });
+  }).then(function(res){ return res.json(); }).then(function(data){
+    if(data.success){
+      document.getElementById('enr-form-section').classList.add('hidden');
+      var success = document.getElementById('enr-final-success');
+      if(success){
+        success.classList.remove('hidden');
+        success.style.opacity='0'; success.style.transition='opacity 0.6s ease';
+        requestAnimationFrame(function(){ requestAnimationFrame(function(){
+          success.style.opacity='1';
+          window.scrollTo({top:success.offsetTop-80,behavior:'smooth'});
+        }); });
+      }
     } else {
+      alert('Something went wrong. Please try again or contact us directly.');
       btn.innerHTML=orig; btn.disabled=false;
     }
+  }).catch(function(){
+    alert('Connection error. Please check your internet and try again.');
+    btn.innerHTML=orig; btn.disabled=false;
   });
 }
 </script>

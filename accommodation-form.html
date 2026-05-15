@@ -1734,6 +1734,77 @@ document.querySelectorAll('input[name="student_type"]').forEach(function(radio) 
   });
 });
 
+// Accommodation form submission
+document.getElementById('acm-form').addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  var name        = document.getElementById('full-name').value.trim();
+  var email       = document.getElementById('email').value.trim();
+  var phone       = document.getElementById('phone').value.trim();
+  var programme   = document.getElementById('programme').value;
+  var moveIn      = document.getElementById('move-in').value;
+  var genderEl    = document.querySelector('input[name="gender"]:checked');
+  var typeEl      = document.querySelector('input[name="student_type"]:checked');
+  var gender      = genderEl   ? genderEl.value   : '';
+  var studentType = typeEl     ? typeEl.value      : '';
+  var idNumber    = studentType === 'Local'
+                    ? document.getElementById('ic-number').value.trim()
+                    : document.getElementById('passport-number').value.trim();
+
+  if (!name || !email || !phone || !gender || !studentType || !idNumber || !programme || !moveIn) {
+    alert('Please fill in all required fields.');
+    return;
+  }
+
+  var btn  = this.querySelector('.form-submit-btn');
+  var orig = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = 'Sending…';
+
+  var formData = {
+    access_key: 'YOUR_WEB3FORMS_ACCESS_KEY',
+    subject:    'Accommodation Application - DIT',
+    from_name:  name,
+    replyto:    email,
+    message:
+      'NEW ACCOMMODATION APPLICATION\n' +
+      '================================\n\n' +
+      'Full Name     : ' + name + '\n' +
+      'Email         : ' + email + '\n' +
+      'Phone         : ' + phone + '\n' +
+      'Gender        : ' + gender + '\n' +
+      'Student Type  : ' + studentType + '\n' +
+      (studentType === 'Local' ? 'IC Number     : ' : 'Passport No.  : ') + idNumber + '\n' +
+      'Programme     : ' + programme + '\n' +
+      'Move-in Date  : ' + moveIn
+  };
+
+  fetch('https://api.web3forms.com/submit', {
+    method:  'POST',
+    headers: {'Content-Type':'application/json','Accept':'application/json'},
+    body:    JSON.stringify(formData)
+  }).then(function(res){ return res.json(); }).then(function(data){
+    if(data.success){
+      var card = document.querySelector('.form-card');
+      card.innerHTML =
+        '<div style="text-align:center;padding:4rem 2rem;">' +
+          '<div style="width:72px;height:72px;background:linear-gradient(135deg,#3a40d6,#5a5fe8);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">' +
+            '<svg viewBox="0 0 24 24" style="width:32px;height:32px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg>' +
+          '</div>' +
+          '<h2 style="font-family:\'Fraunces\',serif;font-size:2rem;font-weight:900;color:#0c1044;margin-bottom:0.6rem;">Application Submitted!</h2>' +
+          '<p style="color:#4a4f6a;font-size:1.05rem;max-width:420px;margin:0 auto 1.5rem;">Thank you, <strong>' + name + '</strong>. Your accommodation application has been received. Our team will contact you within 2–3 working days.</p>' +
+        '</div>';
+      window.scrollTo({top: card.offsetTop - 80, behavior:'smooth'});
+    } else {
+      alert('Something went wrong. Please try again or contact us directly.');
+      btn.innerHTML = orig; btn.disabled = false;
+    }
+  }).catch(function(){
+    alert('Connection error. Please check your internet and try again.');
+    btn.innerHTML = orig; btn.disabled = false;
+  });
+});
+
 // Intersection observer for reveal
 const io = new IntersectionObserver(function(entries) {
   entries.forEach(function(e) {
