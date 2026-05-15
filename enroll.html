@@ -1780,8 +1780,38 @@ main { flex: 1 0 auto; }
   .idp-entry-inner,.idp-sem-grid,.idp-brochure-inner,.enr-form-row{grid-template-columns:1fr;}
   .idp-why-grid{grid-template-columns:repeat(2,1fr);}
   .enr-why-grid{grid-template-columns:repeat(2,1fr);}
-  .idp-info-bar,.idp-why-section,.idp-entry-section,.idp-modules-section,.idp-brochure-section,.idp-cta-section,.prog-list-section,.enr-form-section,.enr-why-strip,.enr-hero{padding-left:1.5rem;padding-right:1.5rem;}
+  .idp-info-bar,.idp-why-section,.idp-entry-section,.idp-modules-section,.idp-brochure-section,.idp-cta-section,.prog-list-section,.enr-form-section,.enr-why-strip,.enr-hero,.enr-choice-section{padding-left:1.5rem;padding-right:1.5rem;}
 }
+/* ── Choice screen ── */
+.enr-choice-section{background:#fff;padding:3.5rem 5rem;}
+.enr-choice-inner{max-width:720px;margin:0 auto;text-align:center;}
+.enr-choice-title{font-family:'Fraunces',serif;font-size:1.65rem;font-weight:900;color:#1a1f6e;margin-bottom:.45rem;}
+.enr-choice-sub{font-size:.95rem;color:#4a4f6b;margin-bottom:2rem;line-height:1.6;}
+.enr-choice-cards{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;text-align:left;}
+.enr-choice-card{display:flex;flex-direction:column;gap:.7rem;padding:1.75rem;border-radius:18px;border:2px solid transparent;cursor:pointer;transition:transform .25s,box-shadow .25s;background:#fff;font-family:inherit;}
+.enr-choice-card.primary{background:linear-gradient(135deg,#3a40d6,#5558e0);border-color:#3a40d6;}
+.enr-choice-card.secondary{border-color:#c8ccff;background:#f4f5ff;}
+.enr-choice-card:hover{transform:translateY(-4px);box-shadow:0 18px 44px -8px rgba(58,64,214,.3);}
+.enr-choice-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.enr-choice-card.primary .enr-choice-icon{background:rgba(255,255,255,.18);}
+.enr-choice-card.secondary .enr-choice-icon{background:#dfe1ff;}
+.enr-choice-icon svg{width:22px;height:22px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.enr-choice-card.primary .enr-choice-icon svg{stroke:#fff;}
+.enr-choice-card.secondary .enr-choice-icon svg{stroke:#3a40d6;}
+.enr-choice-label{font-family:'Fraunces',serif;font-size:1.15rem;font-weight:900;line-height:1.15;}
+.enr-choice-card.primary .enr-choice-label{color:#fff;}
+.enr-choice-card.secondary .enr-choice-label{color:#1a1f6e;}
+.enr-choice-desc{font-size:.85rem;line-height:1.6;flex:1;}
+.enr-choice-card.primary .enr-choice-desc{color:rgba(255,255,255,.82);}
+.enr-choice-card.secondary .enr-choice-desc{color:#4a4f6b;}
+.enr-choice-arrow{display:inline-flex;align-items:center;gap:.3rem;font-size:.82rem;font-weight:700;margin-top:.25rem;}
+.enr-choice-card.primary .enr-choice-arrow{color:rgba(255,255,255,.92);}
+.enr-choice-card.secondary .enr-choice-arrow{color:#3a40d6;}
+.enr-choice-arrow svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+.enr-back-btn{display:inline-flex;align-items:center;gap:.4rem;background:none;border:none;cursor:pointer;color:#3a40d6;font-size:.88rem;font-weight:700;padding:.25rem 0;font-family:inherit;transition:opacity .2s;}
+.enr-back-btn:hover{opacity:.65;}
+.enr-back-btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;}
+@media(max-width:620px){.enr-choice-cards{grid-template-columns:1fr;}}
 /* ── International documents upload section ── */
 #intl-docs-section{display:none;}
 #intl-docs-section.visible{display:block;}
@@ -1849,10 +1879,43 @@ Malaysia.</div>
 </svg></div>
 </section>
 
+<!-- CHOICE -->
+<section class="enr-choice-section enr-step" id="enr-choice-section">
+  <div class="enr-choice-inner" data-reveal>
+    <h2 class="enr-choice-title">How can we help you?</h2>
+    <p class="enr-choice-sub">Choose an option below and we'll make sure you reach the right team.</p>
+    <div class="enr-choice-cards">
+
+      <button type="button" class="enr-choice-card primary" onclick="showEnrollForm()">
+        <div class="enr-choice-icon">
+          <svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+        </div>
+        <span class="enr-choice-label">Enroll Now</span>
+        <span class="enr-choice-desc">Ready to apply? Submit a full enrolment enquiry and our admissions team will contact you within 1–2 working days.</span>
+        <span class="enr-choice-arrow">Get started <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+      </button>
+
+      <button type="button" class="enr-choice-card secondary" onclick="showGeneralEnquiry()">
+        <div class="enr-choice-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <span class="enr-choice-label">General Enquiry</span>
+        <span class="enr-choice-desc">Have a question about programmes, fees, entry requirements, or campus life? Send us a message and we'll reply shortly.</span>
+        <span class="enr-choice-arrow">Ask a question <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></span>
+      </button>
+
+    </div>
+  </div>
+</section>
+
 <!-- FORM -->
-<section class="enr-form-section enr-step" id="enr-form-section">
+<section class="enr-form-section enr-step hidden" id="enr-form-section">
   <div class="enr-form-inner" data-reveal>
-    <h2 class="enr-form-title">Student Enquiry Form</h2>
+    <button type="button" class="enr-back-btn" onclick="showChoiceSection()">
+      <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back to options
+    </button>
+    <h2 class="enr-form-title" style="margin-top:1rem;">Student Enquiry Form</h2>
     <p class="enr-form-sub">Please complete all required fields marked with <span style="color:#e8002d;font-weight:700;">*</span>. Our team will contact you shortly after receiving your enquiry.</p>
 
     <form class="enr-form" id="enquiryForm" onsubmit="handleSubmit(event)">
@@ -2501,7 +2564,145 @@ function handleSubmit(e) {
     btn.innerHTML=orig; btn.disabled=false;
   });
 }
+
+// ── Choice screen navigation ──────────────────────────────
+function showEnrollForm() {
+  document.getElementById('enr-choice-section').classList.add('hidden');
+  document.getElementById('enr-general-section').classList.add('hidden');
+  var sec = document.getElementById('enr-form-section');
+  sec.classList.remove('hidden');
+  window.scrollTo({top: sec.offsetTop - 80, behavior:'smooth'});
+}
+
+function showGeneralEnquiry() {
+  document.getElementById('enr-choice-section').classList.add('hidden');
+  document.getElementById('enr-form-section').classList.add('hidden');
+  var sec = document.getElementById('enr-general-section');
+  sec.classList.remove('hidden');
+  window.scrollTo({top: sec.offsetTop - 80, behavior:'smooth'});
+}
+
+function showChoiceSection() {
+  document.getElementById('enr-form-section').classList.add('hidden');
+  document.getElementById('enr-general-section').classList.add('hidden');
+  var sec = document.getElementById('enr-choice-section');
+  sec.classList.remove('hidden');
+  window.scrollTo({top: sec.offsetTop - 80, behavior:'smooth'});
+}
+
+// ── General enquiry submission ────────────────────────────
+function submitGeneralEnquiry(e) {
+  e.preventDefault();
+  var name    = document.getElementById('gen-name').value.trim();
+  var email   = document.getElementById('gen-email').value.trim();
+  var phone   = document.getElementById('gen-phone').value.trim();
+  var message = document.getElementById('gen-message').value.trim();
+
+  if(!name || !email || !phone || !message){
+    alert('Please fill in all required fields.');
+    return;
+  }
+
+  var btn  = document.getElementById('genSubmitBtn');
+  var orig = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;animation:spin 1s linear infinite;"><circle cx="12" cy="12" r="9" stroke-opacity="0.3"/><path d="M12 3a9 9 0 0 1 9 9"/></svg> Sending…';
+
+  fetch('https://api.web3forms.com/submit', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json','Accept':'application/json'},
+    body: JSON.stringify({
+      access_key: 'YOUR_WEB3FORMS_ACCESS_KEY',
+      subject:    'General Enquiry - DIT',
+      from_name:  name,
+      replyto:    email,
+      message:
+        'GENERAL ENQUIRY\n' +
+        '================\n\n' +
+        'Full Name : ' + name + '\n' +
+        'Email     : ' + email + '\n' +
+        'Phone     : ' + phone + '\n\n' +
+        'Message:\n' + message
+    })
+  }).then(function(res){ return res.json(); }).then(function(data){
+    if(data.success){
+      document.getElementById('gen-form-wrap').style.display = 'none';
+      document.getElementById('gen-success').style.display = 'block';
+      setTimeout(function(){
+        if(document.referrer){ window.location.href = document.referrer; }
+        else { window.history.back(); }
+      }, 3000);
+    } else {
+      alert('Something went wrong. Please try again or contact us directly.');
+      btn.innerHTML = orig; btn.disabled = false;
+    }
+  }).catch(function(){
+    alert('Connection error. Please check your internet and try again.');
+    btn.innerHTML = orig; btn.disabled = false;
+  });
+}
 </script>
+
+
+<!-- GENERAL ENQUIRY -->
+<section class="enr-form-section enr-step hidden" id="enr-general-section">
+  <div class="enr-form-inner" data-reveal>
+
+    <button type="button" class="enr-back-btn" onclick="showChoiceSection()">
+      <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      Back to options
+    </button>
+
+    <div id="gen-form-wrap">
+      <h2 class="enr-form-title" style="margin-top:1rem;">General Enquiry</h2>
+      <p class="enr-form-sub">Have a question? Fill in the form and our team will get back to you within 1–2 working days.</p>
+
+      <form class="enr-form" id="generalEnquiryForm" onsubmit="submitGeneralEnquiry(event)">
+
+        <div class="enr-form-row">
+          <div class="enr-field">
+            <label>Full Name <span>*</span></label>
+            <input type="text" id="gen-name" placeholder="e.g. Ahmad bin Abdullah" required>
+          </div>
+          <div class="enr-field">
+            <label>Email Address <span>*</span></label>
+            <input type="email" id="gen-email" placeholder="e.g. ahmad@email.com" required>
+          </div>
+        </div>
+
+        <div class="enr-field">
+          <label>Phone Number <span>*</span></label>
+          <input type="tel" id="gen-phone" placeholder="e.g. 012-345 6789" required>
+        </div>
+
+        <div class="enr-field">
+          <label>Your Enquiry <span>*</span></label>
+          <textarea id="gen-message" placeholder="Type your question or message here — about programmes, fees, entry requirements, campus life, or anything else…" style="min-height:160px;" required></textarea>
+        </div>
+
+        <div class="enr-divider"></div>
+
+        <div class="enr-submit-row" style="margin-top:1rem;">
+          <button type="submit" class="enr-submit-btn" id="genSubmitBtn">
+            Send Enquiry
+            <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          </button>
+          <p class="enr-privacy">Your information is protected under Malaysia's Personal Data Protection Act 2010 (PDPA).</p>
+        </div>
+
+      </form>
+    </div>
+
+    <div id="gen-success" style="display:none;text-align:center;padding:3rem 1rem;">
+      <div style="width:64px;height:64px;background:linear-gradient(135deg,#3a40d6,#5a5fe8);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.25rem;">
+        <svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h3 style="font-family:'Fraunces',serif;font-size:1.6rem;font-weight:900;color:#0c1044;margin-bottom:.5rem;">Enquiry Sent!</h3>
+      <p style="color:#4a4f6b;font-size:.95rem;line-height:1.7;max-width:400px;margin:0 auto;">Thank you — our team will get back to you within 1–2 working days. Taking you back now…</p>
+    </div>
+
+  </div>
+</section>
 
 
 <!-- ══════════════════════════════════════════════════════════
