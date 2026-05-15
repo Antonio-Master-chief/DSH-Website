@@ -1782,6 +1782,23 @@ main { flex: 1 0 auto; }
   .enr-why-grid{grid-template-columns:repeat(2,1fr);}
   .idp-info-bar,.idp-why-section,.idp-entry-section,.idp-modules-section,.idp-brochure-section,.idp-cta-section,.prog-list-section,.enr-form-section,.enr-why-strip,.enr-hero{padding-left:1.5rem;padding-right:1.5rem;}
 }
+/* ── International documents upload section ── */
+#intl-docs-section{display:none;}
+#intl-docs-section.visible{display:block;}
+.intl-docs-box{background:linear-gradient(135deg,#f0f1ff,#e8eaff);border:2px solid #c8ccff;border-radius:16px;padding:1.5rem 1.75rem;}
+.intl-docs-title{font-size:.82rem;font-weight:800;color:#1a1f6e;text-transform:uppercase;letter-spacing:.08em;margin-bottom:.65rem;display:flex;align-items:center;gap:.5rem;}
+.intl-docs-note{font-size:.84rem;color:#4a4f6b;margin-bottom:1rem;line-height:1.6;}
+.intl-docs-downloads{display:flex;flex-wrap:wrap;gap:.65rem;margin-bottom:1.25rem;}
+.intl-dl-btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1rem;background:#3a40d6;color:#fff;border-radius:8px;font-size:.82rem;font-weight:700;text-decoration:none;transition:background .2s;}
+.intl-dl-btn:hover{background:#2d33c0;}
+.intl-dl-btn svg{width:13px;height:13px;stroke:#fff;fill:none;stroke-width:2;flex-shrink:0;}
+.intl-upload-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;}
+.intl-upload-lbl{display:block;font-size:.81rem;font-weight:700;color:#3a3f60;margin-bottom:.35rem;}
+.intl-upload-input{width:100%;padding:.55rem .75rem;border:2px dashed #c8ccff;border-radius:8px;font-size:.81rem;background:#fff;cursor:pointer;box-sizing:border-box;transition:border-color .2s;}
+.intl-upload-input:focus{border-color:#8a90ff;outline:none;}
+.intl-upload-err{display:none;color:#d62b2b;font-size:.83rem;font-weight:600;margin-top:.65rem;line-height:1.5;}
+.intl-upload-err.visible{display:block;}
+@media(max-width:600px){.intl-upload-grid{grid-template-columns:1fr;}}
 </style>
 
 <!-- HERO -->
@@ -2164,6 +2181,43 @@ Malaysia.</div>
         <textarea id="message" placeholder="Tell us a bit about yourself, your goals, or any specific questions you have about the programme..."></textarea>
       </div>
 
+      <!-- International student required documents (hidden for Malaysian nationality) -->
+      <div id="intl-docs-section">
+        <div class="enr-divider"></div>
+        <div class="intl-docs-box">
+          <div class="intl-docs-title">
+            <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#3a40d6;fill:none;stroke-width:2;flex-shrink:0;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Required Documents — International Applicants Only
+          </div>
+          <p class="intl-docs-note">
+            Download both forms below, fill them in, then re-upload the completed copies before submitting your enquiry.
+          </p>
+          <div class="intl-docs-downloads">
+            <a href="Health_Declaration_Form_For_Applicant.pdf" download class="intl-dl-btn">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download Health Declaration Form
+            </a>
+            <a href="DIT_International_Registration_Form 2026.pdf" download class="intl-dl-btn">
+              <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download Registration Form 2026
+            </a>
+          </div>
+          <div class="intl-upload-grid">
+            <div>
+              <label class="intl-upload-lbl" for="healthFile">Completed Health Declaration Form <span style="color:#e8002d;">*</span></label>
+              <input class="intl-upload-input" type="file" id="healthFile" accept=".pdf,.jpg,.jpeg,.png">
+            </div>
+            <div>
+              <label class="intl-upload-lbl" for="registrationFile">Completed Registration Form 2026 <span style="color:#e8002d;">*</span></label>
+              <input class="intl-upload-input" type="file" id="registrationFile" accept=".pdf,.jpg,.jpeg,.png">
+            </div>
+          </div>
+          <p class="intl-upload-err" id="intl-upload-err">
+            Please upload both completed forms before submitting. Download them above, fill them in, and re-upload here.
+          </p>
+        </div>
+      </div>
+
       <div class="enr-divider"></div>
 
       <div class="enr-tnc-section">
@@ -2313,6 +2367,16 @@ function onTncCheck(cb) {
   document.getElementById('submitBtn').disabled = !cb.checked;
 }
 
+document.getElementById('nationality').addEventListener('change', function(){
+  var sec = document.getElementById('intl-docs-section');
+  if(this.value && this.value !== 'Malaysian'){
+    sec.classList.add('visible');
+  } else {
+    sec.classList.remove('visible');
+    document.getElementById('intl-upload-err').classList.remove('visible');
+  }
+});
+
 (function(){
   var s = document.createElement('style');
   s.textContent = '@keyframes spin{to{transform:rotate(360deg)}}';
@@ -2348,10 +2412,23 @@ function handleSubmit(e) {
 
   if (!document.getElementById('tncCheck').checked) ok=false;
 
+  var isIntl = document.getElementById('nationality').value !== 'Malaysian';
+
   if (!ok) {
     var first = document.querySelector('.enr-field.has-error, .enr-field-error.visible, #id-prompt.visible');
     if (first) first.scrollIntoView({behavior:'smooth',block:'center'});
     return;
+  }
+
+  if(isIntl){
+    var f1 = document.getElementById('healthFile').files[0];
+    var f2 = document.getElementById('registrationFile').files[0];
+    if(!f1 || !f2){
+      document.getElementById('intl-upload-err').classList.add('visible');
+      document.getElementById('intl-docs-section').scrollIntoView({behavior:'smooth',block:'center'});
+      return;
+    }
+    document.getElementById('intl-upload-err').classList.remove('visible');
   }
 
   var btn  = document.getElementById('submitBtn');
@@ -2363,32 +2440,47 @@ function handleSubmit(e) {
     ? (idChecked.value==='ic' ? document.getElementById('icNumber').value : document.getElementById('passportNumber').value)
     : '';
 
-  var formData = {
-    access_key:  'YOUR_WEB3FORMS_ACCESS_KEY',
-    subject:     'New Enrolment Enquiry - DIT',
-    from_name:   document.getElementById('fullName').value.trim(),
-    replyto:     document.getElementById('email').value.trim(),
-    message:
-      'NEW STUDENT ENROLMENT ENQUIRY\n' +
-      '================================\n\n' +
-      'Full Name       : ' + document.getElementById('fullName').value.trim() + '\n' +
-      'Email           : ' + document.getElementById('email').value.trim() + '\n' +
-      'Phone           : ' + document.getElementById('phone').value.trim() + '\n' +
-      'ID Type         : ' + (idChecked ? idChecked.value.toUpperCase() : 'Not provided') + '\n' +
-      'ID Number       : ' + idVal.trim() + '\n' +
-      'Nationality     : ' + document.getElementById('nationality').value + '\n' +
-      'Date of Birth   : ' + document.getElementById('dob').value + '\n' +
-      'Programme       : ' + document.getElementById('programme').value + '\n' +
-      'Education Level : ' + document.getElementById('education').value + '\n' +
-      'Heard about us  : ' + ((document.getElementById('source')||{value:''}).value || 'Not specified') + '\n' +
-      'Message         : ' + (document.getElementById('message').value.trim() || 'None')
-  };
+  var msgText =
+    'NEW STUDENT ENROLMENT ENQUIRY\n' +
+    '================================\n\n' +
+    'Full Name       : ' + document.getElementById('fullName').value.trim() + '\n' +
+    'Email           : ' + document.getElementById('email').value.trim() + '\n' +
+    'Phone           : ' + document.getElementById('phone').value.trim() + '\n' +
+    'ID Type         : ' + (idChecked ? idChecked.value.toUpperCase() : 'Not provided') + '\n' +
+    'ID Number       : ' + idVal.trim() + '\n' +
+    'Nationality     : ' + document.getElementById('nationality').value + '\n' +
+    'Date of Birth   : ' + document.getElementById('dob').value + '\n' +
+    'Programme       : ' + document.getElementById('programme').value + '\n' +
+    'Education Level : ' + document.getElementById('education').value + '\n' +
+    'Heard about us  : ' + ((document.getElementById('source')||{value:''}).value || 'Not specified') + '\n' +
+    'Message         : ' + (document.getElementById('message').value.trim() || 'None');
 
-  fetch('https://api.web3forms.com/submit', {
-    method:'POST',
-    headers:{'Content-Type':'application/json','Accept':'application/json'},
-    body:JSON.stringify(formData)
-  }).then(function(res){ return res.json(); }).then(function(data){
+  var fetchPromise;
+  if(isIntl){
+    var fd = new FormData();
+    fd.append('access_key', 'YOUR_WEB3FORMS_ACCESS_KEY');
+    fd.append('subject',    'New Enrolment Enquiry - DIT (International)');
+    fd.append('from_name',  document.getElementById('fullName').value.trim());
+    fd.append('replyto',    document.getElementById('email').value.trim());
+    fd.append('message',    msgText);
+    fd.append('attachment', document.getElementById('healthFile').files[0]);
+    fd.append('attachment', document.getElementById('registrationFile').files[0]);
+    fetchPromise = fetch('https://api.web3forms.com/submit', {method:'POST', body:fd});
+  } else {
+    fetchPromise = fetch('https://api.web3forms.com/submit', {
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({
+        access_key: 'YOUR_WEB3FORMS_ACCESS_KEY',
+        subject:    'New Enrolment Enquiry - DIT',
+        from_name:  document.getElementById('fullName').value.trim(),
+        replyto:    document.getElementById('email').value.trim(),
+        message:    msgText
+      })
+    });
+  }
+
+  fetchPromise.then(function(res){ return res.json(); }).then(function(data){
     if(data.success){
       document.getElementById('enr-form-section').classList.add('hidden');
       var success = document.getElementById('enr-final-success');
