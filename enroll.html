@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -2334,6 +2334,8 @@ Malaysia.</div>
    DSH Institute of Technology — Enquiry Form JS
    ================================================ */
 
+var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyazC5JkGyx95DOwgUcA8gWA4pDUIj8Qgkt61bJKGr3bPvKBr9stvT96_fSQDFDrKj_/exec';
+
 function validateName(v) {
   v = v.trim();
   if (v.length < 3) return 'Name must be at least 3 characters.';
@@ -2503,68 +2505,74 @@ function handleSubmit(e) {
     ? (idChecked.value==='ic' ? document.getElementById('icNumber').value : document.getElementById('passportNumber').value)
     : '';
 
-  var msgText =
-    'NEW STUDENT ENROLMENT ENQUIRY\n' +
-    '================================\n\n' +
-    'Full Name       : ' + document.getElementById('fullName').value.trim() + '\n' +
-    'Email           : ' + document.getElementById('email').value.trim() + '\n' +
-    'Phone           : ' + document.getElementById('phone').value.trim() + '\n' +
-    'ID Type         : ' + (idChecked ? idChecked.value.toUpperCase() : 'Not provided') + '\n' +
-    'ID Number       : ' + idVal.trim() + '\n' +
-    'Nationality     : ' + document.getElementById('nationality').value + '\n' +
-    'Date of Birth   : ' + document.getElementById('dob').value + '\n' +
-    'Programme       : ' + document.getElementById('programme').value + '\n' +
-    'Education Level : ' + document.getElementById('education').value + '\n' +
-    'Heard about us  : ' + ((document.getElementById('source')||{value:''}).value || 'Not specified') + '\n' +
-    'Message         : ' + (document.getElementById('message').value.trim() || 'None');
+  var payload = {
+    type:        'enrollment',
+    fullName:    document.getElementById('fullName').value.trim(),
+    email:       document.getElementById('email').value.trim(),
+    phone:       document.getElementById('phone').value.trim(),
+    idType:      idChecked ? idChecked.value : '',
+    idNumber:    idVal.trim(),
+    dob:         document.getElementById('dob').value,
+    nationality: document.getElementById('nationality').value,
+    programme:   document.getElementById('programme').value,
+    education:   document.getElementById('education').value,
+    source:      ((document.getElementById('source')||{value:''}).value || 'Not specified'),
+    message:     document.getElementById('message').value.trim()
+  };
 
-  var fetchPromise;
-  if(isIntl){
-    var fd = new FormData();
-    fd.append('access_key', 'YOUR_WEB3FORMS_ACCESS_KEY');
-    fd.append('subject',    'New Enrolment Enquiry - DIT (International)');
-    fd.append('from_name',  document.getElementById('fullName').value.trim());
-    fd.append('replyto',    document.getElementById('email').value.trim());
-    fd.append('message',    msgText);
-    fd.append('attachment', document.getElementById('healthFile').files[0]);
-    fd.append('attachment', document.getElementById('registrationFile').files[0]);
-    fetchPromise = fetch('https://api.web3forms.com/submit', {method:'POST', body:fd});
-  } else {
-    fetchPromise = fetch('https://api.web3forms.com/submit', {
-      method:'POST',
-      headers:{'Content-Type':'application/json','Accept':'application/json'},
-      body:JSON.stringify({
-        access_key: 'YOUR_WEB3FORMS_ACCESS_KEY',
-        subject:    'New Enrolment Enquiry - DIT',
-        from_name:  document.getElementById('fullName').value.trim(),
-        replyto:    document.getElementById('email').value.trim(),
-        message:    msgText
-      })
-    });
+  function postToSheets() {
+    fetch(APPS_SCRIPT_URL, {
+      method:  'POST',
+      mode:    'no-cors',
+      headers: {'Content-Type': 'text/plain'},
+      body:    JSON.stringify(payload)
+    }).catch(function(){});
+    document.getElementById('enr-form-section').classList.add('hidden');
+    var success = document.getElementById('enr-final-success');
+    if (success) {
+      success.classList.remove('hidden');
+      success.style.opacity = '0'; success.style.transition = 'opacity 0.6s ease';
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){
+        success.style.opacity = '1';
+        window.scrollTo({top: success.offsetTop - 80, behavior: 'smooth'});
+      }); });
+    }
   }
 
-  fetchPromise.then(function(res){ return res.json(); }).then(function(data){
-    if(data.success){
-      document.getElementById('enr-form-section').classList.add('hidden');
-      var success = document.getElementById('enr-final-success');
-      if(success){
-        success.classList.remove('hidden');
-        success.style.opacity='0'; success.style.transition='opacity 0.6s ease';
-        requestAnimationFrame(function(){ requestAnimationFrame(function(){
-          success.style.opacity='1';
-          window.scrollTo({top:success.offsetTop-80,behavior:'smooth'});
-        }); });
-      }
-    } else {
-      alert('Something went wrong. Please try again or contact us directly.');
-      btn.innerHTML=orig; btn.disabled=false;
-    }
-  }).catch(function(){
-    alert('Connection error. Please check your internet and try again.');
-    btn.innerHTML=orig; btn.disabled=false;
-  });
+  if (isIntl) {
+    var hFile = document.getElementById('healthFile').files[0];
+    var rFile = document.getElementById('registrationFile').files[0];
+    var hReader = new FileReader();
+    hReader.onload = function() {
+      payload.healthFile = {
+        content:  hReader.result.split(',')[1],
+        mimeType: hFile.type,
+        ext:      hFile.name.split('.').pop().toLowerCase()
+      };
+      var rReader = new FileReader();
+      rReader.onload = function() {
+        payload.regFile = {
+          content:  rReader.result.split(',')[1],
+          mimeType: rFile.type,
+          ext:      rFile.name.split('.').pop().toLowerCase()
+        };
+        postToSheets();
+      };
+      rReader.onerror = function() {
+        alert('Could not read the registration form. Please try again.');
+        btn.innerHTML = orig; btn.disabled = false;
+      };
+      rReader.readAsDataURL(rFile);
+    };
+    hReader.onerror = function() {
+      alert('Could not read the health declaration form. Please try again.');
+      btn.innerHTML = orig; btn.disabled = false;
+    };
+    hReader.readAsDataURL(hFile);
+  } else {
+    postToSheets();
+  }
 }
-
 // ── Choice screen navigation ──────────────────────────────
 function showEnrollForm() {
   document.getElementById('enr-choice-section').classList.add('hidden');
@@ -2598,58 +2606,28 @@ function submitGeneralEnquiry(e) {
   var phone   = document.getElementById('gen-phone').value.trim();
   var message = document.getElementById('gen-message').value.trim();
 
-  if(!name || !email || !phone || !message){
+  if (!name || !email || !phone || !message) {
     alert('Please fill in all required fields.');
     return;
   }
 
-  var btn  = document.getElementById('genSubmitBtn');
-  var orig = btn.innerHTML;
+  var btn = document.getElementById('genSubmitBtn');
   btn.disabled = true;
   btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;animation:spin 1s linear infinite;"><circle cx="12" cy="12" r="9" stroke-opacity="0.3"/><path d="M12 3a9 9 0 0 1 9 9"/></svg> Sending…';
 
-  var waText =
-    'New General Enquiry from DIT Website\n\n' +
-    'Full Name : ' + name + '\n' +
-    'Email     : ' + email + '\n' +
-    'Phone     : ' + phone + '\n\n' +
-    'Message:\n' + message;
+  fetch(APPS_SCRIPT_URL, {
+    method:  'POST',
+    mode:    'no-cors',
+    headers: {'Content-Type': 'text/plain'},
+    body:    JSON.stringify({ type: 'enquiry', name: name, email: email, phone: phone, message: message })
+  }).catch(function(){});
 
-  // Open WhatsApp immediately (triggered by user click — not blocked by browsers)
-  window.open('https://wa.me/60132831908?text=' + encodeURIComponent(waText), '_blank');
-
-  fetch('https://api.web3forms.com/submit', {
-    method: 'POST',
-    headers: {'Content-Type':'application/json','Accept':'application/json'},
-    body: JSON.stringify({
-      access_key: 'YOUR_WEB3FORMS_ACCESS_KEY',
-      subject:    'General Enquiry - DIT',
-      from_name:  name,
-      replyto:    email,
-      message:
-        'GENERAL ENQUIRY\n' +
-        '================\n\n' +
-        'Full Name : ' + name + '\n' +
-        'Email     : ' + email + '\n' +
-        'Phone     : ' + phone + '\n\n' +
-        'Message:\n' + message
-    })
-  }).then(function(res){ return res.json(); }).then(function(data){
-    if(data.success){
-      document.getElementById('gen-form-wrap').style.display = 'none';
-      document.getElementById('gen-success').style.display = 'block';
-      setTimeout(function(){
-        if(document.referrer){ window.location.href = document.referrer; }
-        else { window.history.back(); }
-      }, 3000);
-    } else {
-      alert('Something went wrong. Please try again or contact us directly.');
-      btn.innerHTML = orig; btn.disabled = false;
-    }
-  }).catch(function(){
-    alert('Connection error. Please check your internet and try again.');
-    btn.innerHTML = orig; btn.disabled = false;
-  });
+  document.getElementById('gen-form-wrap').style.display = 'none';
+  document.getElementById('gen-success').style.display = 'block';
+  setTimeout(function(){
+    if (document.referrer) { window.location.href = document.referrer; }
+    else { window.history.back(); }
+  }, 3000);
 }
 </script>
 
