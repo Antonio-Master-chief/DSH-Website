@@ -2334,7 +2334,7 @@ Malaysia.</div>
    DSH Institute of Technology — Enquiry Form JS
    ================================================ */
 
-var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwIZWcc3P52qiGpTXE4RMa3W2ThL6Z2FABZvOCvgiwBYigN6NisVcF43x_1Dy74PSUD/exec';
+var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby0YVoMjJ65yui1ST6ux0uBHwMjn1CZAePBbIoAUXTC_K2ib17D23WX1Y4TEuveJ4gA/exec';
 
 function validateName(v) {
   v = v.trim();
@@ -2521,11 +2521,15 @@ function handleSubmit(e) {
   };
 
   function postToSheets() {
-    fetch(APPS_SCRIPT_URL, {
-      method:  'POST',
-      mode:    'no-cors',
-      headers: {'Content-Type': 'text/plain'},
-      body:    JSON.stringify(payload)
+    var urlPayload = {
+      type: payload.type, fullName: payload.fullName, email: payload.email,
+      phone: payload.phone, idType: payload.idType, idNumber: payload.idNumber,
+      dob: payload.dob, nationality: payload.nationality, programme: payload.programme,
+      education: payload.education, source: payload.source, message: payload.message
+    };
+    if (payload.healthFile) urlPayload.hasPdfs = true;
+    fetch(APPS_SCRIPT_URL + '?data=' + encodeURIComponent(JSON.stringify(urlPayload)), {
+      mode: 'no-cors'
     }).catch(function(){});
     document.getElementById('enr-form-section').classList.add('hidden');
     var success = document.getElementById('enr-final-success');
@@ -2615,12 +2619,9 @@ function submitGeneralEnquiry(e) {
   btn.disabled = true;
   btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;animation:spin 1s linear infinite;"><circle cx="12" cy="12" r="9" stroke-opacity="0.3"/><path d="M12 3a9 9 0 0 1 9 9"/></svg> Sending…';
 
-  fetch(APPS_SCRIPT_URL, {
-    method:  'POST',
-    mode:    'no-cors',
-    headers: {'Content-Type': 'text/plain'},
-    body:    JSON.stringify({ type: 'enquiry', name: name, email: email, phone: phone, message: message })
-  }).catch(function(){});
+  fetch(APPS_SCRIPT_URL + '?data=' + encodeURIComponent(JSON.stringify(
+    { type: 'enquiry', name: name, email: email, phone: phone, message: message }
+  )), { mode: 'no-cors' }).catch(function(){});
 
   document.getElementById('gen-form-wrap').style.display = 'none';
   document.getElementById('gen-success').style.display = 'block';

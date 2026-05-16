@@ -19,9 +19,18 @@ var CONFIG = {
 
 // ── Entry points ────────────────────────────────────────────────
 
-function doGet() {
-  return ContentService.createTextOutput('DIT Form Handler is live.')
-    .setMimeType(ContentService.MimeType.TEXT);
+function doGet(e) {
+  if (e && e.parameter && e.parameter.data) {
+    try {
+      var data = JSON.parse(e.parameter.data);
+      if (data.type === 'enrollment')  processEnrollment(data);
+      else if (data.type === 'enquiry') processEnquiry(data);
+    } catch (err) {
+      Logger.log('doGet error: ' + err.toString());
+    }
+  }
+  return ContentService.createTextOutput(JSON.stringify({ success: true }))
+    .setMimeType(ContentService.MimeType.JSON);
 }
 
 function doPost(e) {
