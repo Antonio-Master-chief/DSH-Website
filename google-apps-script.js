@@ -45,11 +45,36 @@ function doPost(e) {
   }
 }
 
+// ── Sheet helpers ───────────────────────────────────────────────
+
+function getOrCreateSheet(ss, name, headers) {
+  var sheet = ss.getSheetByName(name);
+  if (!sheet) {
+    sheet = ss.insertSheet(name);
+    sheet.getRange(1, 1, 1, headers.length).setValues([headers])
+      .setBackground('#1a1d2e').setFontColor('#ffffff').setFontWeight('bold');
+    sheet.setFrozenRows(1);
+  }
+  return sheet;
+}
+
+var ENR_HEADERS = [
+  'Timestamp','Full Name','Email','Phone','ID Type','ID Number',
+  'Date of Birth','Nationality','Programme','Education Level',
+  'Heard About Us','Message','Student Type',
+  'Health Declaration (Drive)','Registration Form (Drive)',
+  'Status','Admin Notes','Date Checked'
+];
+var ENQ_HEADERS = [
+  'Timestamp','Full Name','Email','Phone','Message',
+  'Status','Admin Notes','Date Checked'
+];
+
 // ── Enrollment handler ──────────────────────────────────────────
 
 function processEnrollment(data) {
-  var ss     = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
-  var sheet  = ss.getSheetByName('Enrollments');
+  var ss    = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
+  var sheet = getOrCreateSheet(ss, 'Enrollments', ENR_HEADERS);
   var ts     = Utilities.formatDate(new Date(), 'Asia/Kuala_Lumpur', 'dd/MM/yyyy HH:mm:ss');
   var folder = DriveApp.getFolderById(CONFIG.DRIVE_FOLDER_ID);
   var safeName = (data.fullName || 'Student').replace(/[^A-Za-z0-9 ]/g, '').replace(/\s+/g, '_');
@@ -119,7 +144,7 @@ function processEnrollment(data) {
 
 function processEnquiry(data) {
   var ss    = SpreadsheetApp.openById(CONFIG.SPREADSHEET_ID);
-  var sheet = ss.getSheetByName('Enquiries');
+  var sheet = getOrCreateSheet(ss, 'Enquiries', ENQ_HEADERS);
   var ts    = Utilities.formatDate(new Date(), 'Asia/Kuala_Lumpur', 'dd/MM/yyyy HH:mm:ss');
 
   sheet.appendRow([
