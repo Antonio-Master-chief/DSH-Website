@@ -1405,7 +1405,30 @@ main { flex: 1 0 auto; }
   </div>
 </section>
 <script>
-function submitEq(e){e.preventDefault();var n=document.getElementById("eq-name").value.trim(),em=document.getElementById("eq-email").value.trim(),ph=document.getElementById("eq-phone").value.trim(),mg=document.getElementById("eq-msg").value.trim();if(!n||!em||!ph||!mg){alert("Please fill in all required fields.");return;}document.getElementById("eq-form").style.display="none";document.getElementById("eq-success").style.display="block";window.scrollTo({top:document.getElementById("eq-success").offsetTop-80,behavior:"smooth"});}
+var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby0YVoMjJ65yui1ST6ux0uBHwMjn1CZAePBbIoAUXTC_K2ib17D23WX1Y4TEuveJ4gA/exec';
+function submitEq(e){
+  e.preventDefault();
+  var n=document.getElementById("eq-name").value.trim(),
+      em=document.getElementById("eq-email").value.trim(),
+      ph=document.getElementById("eq-phone").value.trim(),
+      mg=document.getElementById("eq-msg").value.trim();
+  if(!n||!em||!ph||!mg){alert("Please fill in all required fields.");return;}
+  var btn=e.target.querySelector('button[type="submit"]');
+  if(btn){btn.disabled=true;btn.textContent='Sending…';}
+  fetch(APPS_SCRIPT_URL,{
+    method:'POST',
+    mode:'no-cors',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({type:'enquiry',name:n,email:em,phone:ph,message:mg})
+  }).then(function(){
+    document.getElementById("eq-form").style.display="none";
+    document.getElementById("eq-success").style.display="block";
+    window.scrollTo({top:document.getElementById("eq-success").offsetTop-80,behavior:"smooth"});
+  }).catch(function(){
+    alert("Connection error. Please check your internet and try again.");
+    if(btn){btn.disabled=false;btn.textContent='Send Enquiry';}
+  });
+}
 </script>
 </main>
 
