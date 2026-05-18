@@ -2528,8 +2528,10 @@ function handleSubmit(e) {
       education: payload.education, source: payload.source, message: payload.message
     };
     if (payload.healthFile) urlPayload.hasPdfs = true;
-    fetch(APPS_SCRIPT_URL + '?data=' + encodeURIComponent(JSON.stringify(urlPayload)), {
-      mode: 'no-cors'
+    fetch(APPS_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: JSON.stringify(urlPayload)
     }).catch(function(){});
     document.getElementById('enr-form-section').classList.add('hidden');
     var success = document.getElementById('enr-final-success');
@@ -2619,9 +2621,11 @@ function submitGeneralEnquiry(e) {
   btn.disabled = true;
   btn.innerHTML = '<svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2;animation:spin 1s linear infinite;"><circle cx="12" cy="12" r="9" stroke-opacity="0.3"/><path d="M12 3a9 9 0 0 1 9 9"/></svg> Sending…';
 
-  fetch(APPS_SCRIPT_URL + '?data=' + encodeURIComponent(JSON.stringify(
-    { type: 'enquiry', name: name, email: email, phone: phone, message: message }
-  )), { mode: 'no-cors' }).catch(function(){});
+  fetch(APPS_SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    body: JSON.stringify({ type: 'enquiry', name: name, email: email, phone: phone, message: message })
+  }).catch(function(){});
 
   document.getElementById('gen-form-wrap').style.display = 'none';
   document.getElementById('gen-success').style.display = 'block';
