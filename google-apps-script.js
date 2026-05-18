@@ -11,11 +11,12 @@
 // ================================================================
 
 var CONFIG = {
-  SPREADSHEET_ID: 'PASTE_YOUR_SPREADSHEET_ID_HERE',
-  DRIVE_FOLDER_ID: 'PASTE_YOUR_DRIVE_FOLDER_ID_HERE',
-  WA_NUMBER:       '60132831908',
-  WA_API_KEY:      'PASTE_YOUR_CALLMEBOT_API_KEY_HERE',
-  ADMIN_EMAIL:     'admissions@dit.edu.my'
+  SPREADSHEET_ID:              'PASTE_YOUR_SPREADSHEET_ID_HERE',
+  ACCOMMODATION_SPREADSHEET_ID:'16yUQtnER39njj4L6xF62iCNbROkN7m7D4Q4ypqBn28U',
+  DRIVE_FOLDER_ID:             'PASTE_YOUR_DRIVE_FOLDER_ID_HERE',
+  WA_NUMBER:                   '60132831908',
+  WA_API_KEY:                  'PASTE_YOUR_CALLMEBOT_API_KEY_HERE',
+  ADMIN_EMAIL:                 'admissions@dit.edu.my'
 };
 
 // ── Entry points ────────────────────────────────────────────────
@@ -24,8 +25,9 @@ function doGet(e) {
   if (e && e.parameter && e.parameter.data) {
     try {
       var data = JSON.parse(e.parameter.data);
-      if (data.type === 'enrollment')  processEnrollment(data);
-      else if (data.type === 'enquiry') processEnquiry(data);
+      if (data.type === 'enrollment')       processEnrollment(data);
+      else if (data.type === 'enquiry')     processEnquiry(data);
+      else if (data.type === 'accommodation') processAccommodation(data);
     } catch (err) {
       Logger.log('doGet error: ' + err.toString());
     }
@@ -41,6 +43,8 @@ function doPost(e) {
       processEnrollment(data);
     } else if (data.type === 'enquiry') {
       processEnquiry(data);
+    } else if (data.type === 'accommodation') {
+      processAccommodation(data);
     } else {
       throw new Error('Unknown type: ' + data.type);
     }
@@ -77,6 +81,11 @@ var ENR_HEADERS = [
 ];
 var ENQ_HEADERS = [
   'Timestamp','Full Name','Email','Phone','Message',
+  'Status','Admin Notes','Date Checked'
+];
+var ACM_HEADERS = [
+  'Timestamp','Full Name','Email','Phone','Gender',
+  'Student Type','ID Number','Programme','Move-in Date',
   'Status','Admin Notes','Date Checked'
 ];
 
@@ -231,6 +240,69 @@ function processEnquiry(data) {
   sendEmail('💬 New Enquiry: ' + (data.name || 'Visitor') + ' — DIT', emailHtml);
 }
 
+// ── Accommodation handler ────────────────────────────────────────
+
+function processAccommodation(data) {
+  var ss    = SpreadsheetApp.openById(CONFIG.ACCOMMODATION_SPREADSHEET_ID);
+  var sheet = getOrCreateSheet(ss, 'Accommodation', ACM_HEADERS);
+  var ts    = Utilities.formatDate(new Date(), 'Asia/Kuala_Lumpur', 'dd/MM/yyyy HH:mm:ss');
+
+  sheet.appendRow([
+    ts,
+    data.fullName    || '',
+    data.email       || '',
+    data.phone       || '',
+    data.gender      || '',
+    data.studentType || '',
+    data.idNumber    || '',
+    data.programme   || '',
+    data.moveIn      || '',
+    'Pending',
+    '',
+    ''
+  ]);
+
+  var lastRow = sheet.getLastRow();
+  styleStatusCell(sheet, lastRow, 10);  // col J = Status
+
+  var sheetUrl = 'https://docs.google.com/spreadsheets/d/' + CONFIG.ACCOMMODATION_SPREADSHEET_ID;
+  var waMsg =
+    '🏠 *NEW ACCOMMODATION APPLICATION — DIT*\n' +
+    '────────────────────\n' +
+    '👤 ' + (data.fullName    || '') + '\n' +
+    '📧 ' + (data.email       || '') + '\n' +
+    '📱 ' + (data.phone       || '') + '\n' +
+    '🎓 ' + (data.programme   || '') + '\n' +
+    '📅 Move-in: ' + (data.moveIn || '') + '\n' +
+    '────────────────────\n' +
+    '📊 View sheet:\n' + sheetUrl;
+
+  sendWhatsApp(waMsg);
+
+  var emailHtml =
+    '<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;border:1px solid #ddd;border-radius:8px;overflow:hidden">' +
+    '<div style="background:#1a2063;padding:20px 24px">' +
+    '<h2 style="color:#fff;margin:0;font-size:18px">🏠 New Accommodation Application — DIT</h2>' +
+    '</div>' +
+    '<div style="padding:24px;background:#fff">' +
+    '<table style="width:100%;border-collapse:collapse;font-size:14px">' +
+    '<tr><td style="padding:8px 0;color:#555;width:40%"><b>Full Name</b></td><td>' + (data.fullName    || '') + '</td></tr>' +
+    '<tr><td style="padding:8px 0;color:#555"><b>Email</b></td><td>'         + (data.email       || '') + '</td></tr>' +
+    '<tr><td style="padding:8px 0;color:#555"><b>Phone</b></td><td>'         + (data.phone       || '') + '</td></tr>' +
+    '<tr><td style="padding:8px 0;color:#555"><b>Gender</b></td><td>'        + (data.gender      || '') + '</td></tr>' +
+    '<tr><td style="padding:8px 0;color:#555"><b>Student Type</b></td><td>'  + (data.studentType || '') + '</td></tr>' +
+    '<tr><td style="padding:8px 0;color:#555"><b>ID Number</b></td><td>'     + (data.idNumber    || '') + '</td></tr>' +
+    '<tr><td style="padding:8px 0;color:#555"><b>Programme</b></td><td>'     + (data.programme   || '') + '</td></tr>' +
+    '<tr><td style="padding:8px 0;color:#555"><b>Move-in Date</b></td><td>'  + (data.moveIn      || '') + '</td></tr>' +
+    '<tr><td style="padding:8px 0;color:#555"><b>Submitted</b></td><td>'     + ts                       + '</td></tr>' +
+    '</table>' +
+    '<div style="margin-top:20px">' +
+    '<a href="' + sheetUrl + '" style="background:#1a2063;color:#fff;padding:10px 20px;border-radius:5px;text-decoration:none;font-size:14px">View Spreadsheet</a>' +
+    '</div></div></div>';
+
+  sendEmail('🏠 New Accommodation Application: ' + (data.fullName || 'Student') + ' — DIT', emailHtml);
+}
+
 // ── WhatsApp via CallMeBot ──────────────────────────────────────
 
 function sendWhatsApp(message) {
@@ -310,4 +382,24 @@ function setupSheets() {
   });
 
   Logger.log('Sheets set up! Enrollments and Enquiries are ready.');
+}
+
+// Run this ONCE from the script editor after creating the Accommodation spreadsheet.
+function setupAccommodationSheet() {
+  var ss  = SpreadsheetApp.openById(CONFIG.ACCOMMODATION_SPREADSHEET_ID);
+  var acm = ss.getSheetByName('Accommodation');
+  if (!acm) { acm = ss.insertSheet('Accommodation'); }
+  acm.clearContents();
+  var acmH = ['Timestamp','Full Name','Email','Phone','Gender',
+              'Student Type','ID Number','Programme','Move-in Date',
+              'Status','Admin Notes','Date Checked'];
+  acm.getRange(1, 1, 1, acmH.length).setValues([acmH])
+    .setBackground('#1a1d2e').setFontColor('#ffffff').setFontWeight('bold');
+  acm.setFrozenRows(1);
+  [1,140, 2,160, 3,190, 4,120, 5,90,
+   6,110, 7,150, 8,230, 9,120,
+   10,100, 11,220, 12,120].forEach(function(v,i,a){
+    if (i%2===0) acm.setColumnWidth(a[i], a[i+1]);
+  });
+  Logger.log('Accommodation sheet ready!');
 }
