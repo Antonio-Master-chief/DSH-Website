@@ -14,7 +14,8 @@ var CONFIG = {
   SPREADSHEET_ID: 'PASTE_YOUR_SPREADSHEET_ID_HERE',
   DRIVE_FOLDER_ID: 'PASTE_YOUR_DRIVE_FOLDER_ID_HERE',
   WA_NUMBER:       '60132831908',
-  WA_API_KEY:      'PASTE_YOUR_CALLMEBOT_API_KEY_HERE'
+  WA_API_KEY:      'PASTE_YOUR_CALLMEBOT_API_KEY_HERE',
+  ADMIN_EMAIL:     'admissions@dit.edu.my'
 };
 
 // ── Entry points ────────────────────────────────────────────────
@@ -147,6 +148,32 @@ function processEnrollment(data) {
     '📊 View sheet:\n' + sheetUrl;
 
   sendWhatsApp(waMsg);
+
+  var emailHtml =
+    '<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;border:1px solid #ddd;border-radius:8px;overflow:hidden">' +
+    '<div style="background:#1a2063;padding:20px 24px">' +
+    '<h2 style="color:#fff;margin:0;font-size:18px">📋 New Enrolment — DIT</h2>' +
+    '</div>' +
+    '<div style="padding:24px;background:#fff">' +
+    '<table style="width:100%;border-collapse:collapse;font-size:14px">' +
+    '<tr><td style="padding:8px 0;color:#555;width:40%"><b>Full Name</b></td><td>' + (data.fullName || '') + '</td></tr>' +
+    '<tr><td style="padding:8px 0;color:#555"><b>Email</b></td><td>' + (data.email || '') + '</td></tr>' +
+    '<tr><td style="padding:8px 0;color:#555"><b>Phone</b></td><td>' + (data.phone || '') + '</td></tr>' +
+    '<tr><td style="padding:8px 0;color:#555"><b>Nationality</b></td><td>' + (data.nationality || '') + '</td></tr>' +
+    '<tr><td style="padding:8px 0;color:#555"><b>Programme</b></td><td>' + (data.programme || '') + '</td></tr>' +
+    '<tr><td style="padding:8px 0;color:#555"><b>Education Level</b></td><td>' + (data.education || '') + '</td></tr>' +
+    '<tr><td style="padding:8px 0;color:#555"><b>ID Type</b></td><td>' + (data.idType || '').toUpperCase() + '</td></tr>' +
+    '<tr><td style="padding:8px 0;color:#555"><b>ID Number</b></td><td>' + (data.idNumber || '') + '</td></tr>' +
+    '<tr><td style="padding:8px 0;color:#555"><b>Date of Birth</b></td><td>' + (data.dob || '') + '</td></tr>' +
+    '<tr><td style="padding:8px 0;color:#555"><b>Heard About Us</b></td><td>' + (data.source || '') + '</td></tr>' +
+    '<tr><td style="padding:8px 0;color:#555"><b>Message</b></td><td>' + (data.message || '') + '</td></tr>' +
+    '<tr><td style="padding:8px 0;color:#555"><b>Submitted</b></td><td>' + ts + '</td></tr>' +
+    '</table>' +
+    '<div style="margin-top:20px">' +
+    '<a href="' + sheetUrl + '" style="background:#1a2063;color:#fff;padding:10px 20px;border-radius:5px;text-decoration:none;font-size:14px">View Spreadsheet</a>' +
+    '</div></div></div>';
+
+  sendEmail('📋 New Enrolment: ' + (data.fullName || 'Student') + ' — DIT', emailHtml);
 }
 
 // ── Enquiry handler ─────────────────────────────────────────────
@@ -183,6 +210,25 @@ function processEnquiry(data) {
     '📊 View sheet:\n' + sheetUrl;
 
   sendWhatsApp(waMsg);
+
+  var emailHtml =
+    '<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;border:1px solid #ddd;border-radius:8px;overflow:hidden">' +
+    '<div style="background:#1a2063;padding:20px 24px">' +
+    '<h2 style="color:#fff;margin:0;font-size:18px">💬 New Enquiry — DIT</h2>' +
+    '</div>' +
+    '<div style="padding:24px;background:#fff">' +
+    '<table style="width:100%;border-collapse:collapse;font-size:14px">' +
+    '<tr><td style="padding:8px 0;color:#555;width:40%"><b>Full Name</b></td><td>' + (data.name || '') + '</td></tr>' +
+    '<tr><td style="padding:8px 0;color:#555"><b>Email</b></td><td>' + (data.email || '') + '</td></tr>' +
+    '<tr><td style="padding:8px 0;color:#555"><b>Phone</b></td><td>' + (data.phone || '') + '</td></tr>' +
+    '<tr><td style="padding:8px 0;color:#555"><b>Message</b></td><td>' + (data.message || '') + '</td></tr>' +
+    '<tr><td style="padding:8px 0;color:#555"><b>Submitted</b></td><td>' + ts + '</td></tr>' +
+    '</table>' +
+    '<div style="margin-top:20px">' +
+    '<a href="' + sheetUrl + '" style="background:#1a2063;color:#fff;padding:10px 20px;border-radius:5px;text-decoration:none;font-size:14px">View Spreadsheet</a>' +
+    '</div></div></div>';
+
+  sendEmail('💬 New Enquiry: ' + (data.name || 'Visitor') + ' — DIT', emailHtml);
 }
 
 // ── WhatsApp via CallMeBot ──────────────────────────────────────
@@ -196,6 +242,20 @@ function sendWhatsApp(message) {
     UrlFetchApp.fetch(url);
   } catch (e) {
     Logger.log('WhatsApp error: ' + e.toString());
+  }
+}
+
+// ── Email via Gmail ─────────────────────────────────────────────
+
+function sendEmail(subject, htmlBody) {
+  try {
+    MailApp.sendEmail({
+      to:       CONFIG.ADMIN_EMAIL,
+      subject:  subject,
+      htmlBody: htmlBody
+    });
+  } catch (e) {
+    Logger.log('Email error: ' + e.toString());
   }
 }
 
