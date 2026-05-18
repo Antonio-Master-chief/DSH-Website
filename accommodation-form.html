@@ -1523,6 +1523,15 @@ main { flex: 1 0 auto; }
       </div>
 
     </form>
+
+    <div id="acm-success" style="display:none;text-align:center;padding:4rem 2rem;">
+      <div style="width:72px;height:72px;background:linear-gradient(135deg,#3a40d6,#5a5fe8);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+        <svg viewBox="0 0 24 24" style="width:32px;height:32px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h2 style="font-family:'Fraunces',serif;font-size:2rem;font-weight:900;color:#0c1044;margin-bottom:0.6rem;">Application Submitted!</h2>
+      <p id="acm-success-msg" style="color:#4a4f6a;font-size:1.05rem;max-width:420px;margin:0 auto 1.5rem;"></p>
+    </div>
+
   </div>
 </section>
 
@@ -1781,16 +1790,12 @@ document.getElementById('acm-form').addEventListener('submit', function(e) {
     headers: {'Content-Type':'application/json'},
     body:    JSON.stringify(payload)
   }).then(function() {
-    var card = document.querySelector('.form-card');
-    card.innerHTML =
-      '<div style="text-align:center;padding:4rem 2rem;">' +
-        '<div style="width:72px;height:72px;background:linear-gradient(135deg,#3a40d6,#5a5fe8);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">' +
-          '<svg viewBox="0 0 24 24" style="width:32px;height:32px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg>' +
-        '</div>' +
-        '<h2 style="font-family:\'Fraunces\',serif;font-size:2rem;font-weight:900;color:#0c1044;margin-bottom:0.6rem;">Application Submitted!</h2>' +
-        '<p style="color:#4a4f6a;font-size:1.05rem;max-width:420px;margin:0 auto 1.5rem;">Thank you, <strong>' + name + '</strong>. Your accommodation application has been received. Our team will contact you within 2–3 working days.</p>' +
-      '</div>';
-    window.scrollTo({top: card.offsetTop - 80, behavior:'smooth'});
+    document.getElementById('acm-form').style.display = 'none';
+    var success = document.getElementById('acm-success');
+    document.getElementById('acm-success-msg').innerHTML =
+      'Thank you, <strong>' + name + '</strong>. Your accommodation application has been received. Our team will contact you within 2–3 working days.';
+    success.style.display = 'block';
+    window.scrollTo({ top: success.offsetTop - 80, behavior: 'smooth' });
   }).catch(function(){
     alert('Connection error. Please check your internet and try again.');
     btn.innerHTML = orig; btn.disabled = false;
