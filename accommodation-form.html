@@ -1524,12 +1524,31 @@ main { flex: 1 0 auto; }
 
     </form>
 
-    <div id="acm-success" style="display:none;text-align:center;padding:4rem 2rem;">
-      <div style="width:72px;height:72px;background:linear-gradient(135deg,#3a40d6,#5a5fe8);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
-        <svg viewBox="0 0 24 24" style="width:32px;height:32px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg>
+    <div id="acm-success" style="display:none;text-align:center;padding:5rem 2rem;background:#fff;">
+      <div style="max-width:600px;margin:0 auto;">
+        <div style="width:72px;height:72px;background:linear-gradient(135deg,#3a40d6,#5a5fe8);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+          <svg viewBox="0 0 24 24" style="width:32px;height:32px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h2 style="font-family:'Fraunces',serif;font-size:2rem;font-weight:900;color:#0c1044;margin-bottom:0.6rem;">Application Submitted!</h2>
+        <p id="acm-success-msg" style="color:#4a4f6b;font-size:1rem;line-height:1.7;margin-bottom:2rem;max-width:420px;margin-left:auto;margin-right:auto;"></p>
+        <div style="background:#eef0ff;border-radius:16px;padding:1.4rem 1.8rem;margin-bottom:2rem;text-align:left;">
+          <p style="font-size:0.82rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#8a90b0;margin-bottom:0.8rem;">Need to reach us sooner?</p>
+          <div style="display:flex;flex-wrap:wrap;gap:1rem;">
+            <a href="tel:+60341443800" style="display:flex;align-items:center;gap:0.5rem;color:#3a40d6;font-weight:600;text-decoration:none;font-size:0.92rem;">
+              <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;"><path d="M22 16.92v3a2 2 0 01-2.18 2A19.79 19.79 0 0112 18.91a19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.81 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11l-.79.79a16 16 0 006.69 6.69l.79-.79a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+              03-4144 3800
+            </a>
+            <a href="mailto:admissions@dit.edu.my" style="display:flex;align-items:center;gap:0.5rem;color:#3a40d6;font-weight:600;text-decoration:none;font-size:0.92rem;">
+              <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              admissions@dit.edu.my
+            </a>
+          </div>
+        </div>
+        <a href="index.html" style="display:inline-flex;align-items:center;gap:0.5rem;color:#6068cc;font-weight:600;font-size:0.9rem;text-decoration:none;">
+          <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;transform:rotate(180deg);"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+          Back to Homepage
+        </a>
       </div>
-      <h2 style="font-family:'Fraunces',serif;font-size:2rem;font-weight:900;color:#0c1044;margin-bottom:0.6rem;">Application Submitted!</h2>
-      <p id="acm-success-msg" style="color:#4a4f6a;font-size:1.05rem;max-width:420px;margin:0 auto 1.5rem;"></p>
     </div>
 
   </div>
@@ -1787,7 +1806,6 @@ document.getElementById('acm-form').addEventListener('submit', function(e) {
   fetch(APPS_SCRIPT_URL, {
     method:  'POST',
     mode:    'no-cors',
-    headers: {'Content-Type':'application/json'},
     body:    JSON.stringify(payload)
   }).then(function() {
     document.getElementById('acm-form').style.display = 'none';
