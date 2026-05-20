@@ -330,3 +330,51 @@ function setupAccommodationSheet() {
   w.forEach(function(width, i) { sh.setColumnWidth(i+1, width); });
   Logger.log('Accommodation sheet headers and widths updated!');
 }
+
+// ── Accommodation diagnostics — run from script editor ──────────
+
+function testAccommodationWrite() {
+  try {
+    Logger.log('Opening accommodation spreadsheet...');
+    var ss = SpreadsheetApp.openById(CONFIG.ACCOMMODATION_SPREADSHEET_ID);
+    Logger.log('Spreadsheet name: ' + ss.getName());
+
+    var sheets = ss.getSheets().map(function(s) { return s.getName(); });
+    Logger.log('Tabs found: ' + sheets.join(', '));
+
+    var sheet = getOrCreateSheet(ss, 'Accommodation', ACM_HEADERS);
+    Logger.log('Sheet found/created: ' + sheet.getName());
+    Logger.log('Last row before write: ' + sheet.getLastRow());
+
+    var ts = Utilities.formatDate(new Date(), 'Asia/Kuala_Lumpur', 'dd/MM/yyyy HH:mm:ss');
+    sheet.appendRow([
+      sheet.getLastRow(), ts,
+      'TEST ENTRY', 'test@test.com', '0100000000',
+      'Male', 'Local', 'TEST-000', 'Test Programme', '01/01/2026',
+      'Pending', 'Auto-test — delete this row', ''
+    ]);
+    Logger.log('SUCCESS — row written. Last row now: ' + sheet.getLastRow());
+    Logger.log('If you see a test row in the sheet, the script has full access. Delete it manually.');
+  } catch (err) {
+    Logger.log('ERROR: ' + err.toString());
+    Logger.log('This error tells us why the accommodation form is not writing.');
+  }
+}
+
+function removeAccommodationProtection() {
+  try {
+    var ss = SpreadsheetApp.openById(CONFIG.ACCOMMODATION_SPREADSHEET_ID);
+    var sheet = ss.getSheetByName('Accommodation');
+    if (!sheet) { Logger.log('No tab named "Accommodation" found.'); return; }
+    var protections = sheet.getProtections(SpreadsheetApp.ProtectionType.SHEET);
+    protections = protections.concat(sheet.getProtections(SpreadsheetApp.ProtectionType.RANGE));
+    if (protections.length === 0) {
+      Logger.log('No protections found on this sheet — protection is not the issue.');
+    } else {
+      protections.forEach(function(p) { p.remove(); });
+      Logger.log('Removed ' + protections.length + ' protection(s). Try submitting the form again.');
+    }
+  } catch (err) {
+    Logger.log('ERROR: ' + err.toString());
+  }
+}
