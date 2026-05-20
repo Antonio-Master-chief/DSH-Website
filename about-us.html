@@ -1086,8 +1086,7 @@ main { flex: 1 0 auto; }
   .wa-float:hover { width: 240px; }
 }
 
-.au-card-logos img{mix-blend-mode:multiply;background:#fff;border-radius:10px;}
-.au-logo-box{background:#fff;border-radius:12px;padding:8px 12px;}
+.au-card-logos img{mix-blend-mode:multiply;}
 
 .latest-inner { max-width:1200px; margin:0 auto; display:grid; grid-template-columns:1fr 1.65fr; gap:3rem; align-items:center; }
 .latest-title { font-family:'Fraunces',serif; font-size:clamp(2rem,5vw,3.5rem); font-weight:900; color:#fff; text-decoration:underline; text-decoration-color:rgba(255,255,255,.5); text-underline-offset:8px; line-height:1.15; }
@@ -1257,11 +1256,12 @@ main { flex: 1 0 auto; }
 <main>
 <style>
 /* ====== ABOUT US / INTRO PAGE ====== */
-.au-intro-banner{background:linear-gradient(160deg,#0c1044 0%,#1e276e 55%,#0c1044 100%);padding:5rem 5rem 4rem;text-align:center;position:relative;overflow:hidden;}
-.au-intro-banner::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 20% 50%,rgba(138,144,255,.15),transparent 50%),radial-gradient(circle at 80% 30%,rgba(106,113,240,.12),transparent 50%);pointer-events:none;}
+.au-intro-banner{background:linear-gradient(160deg,#faf5f5 0%,#f5eaea 55%,#faf5f5 100%);padding:3.5rem 5rem 3rem;text-align:center;position:relative;overflow:hidden;border-bottom:3px solid #8b1a1a;}
+.au-intro-banner::before{content:'';position:absolute;inset:0;background-image:radial-gradient(circle at 20% 50%,rgba(139,26,26,.06),transparent 50%),radial-gradient(circle at 80% 30%,rgba(139,26,26,.05),transparent 50%);pointer-events:none;}
 .au-intro-inner{max-width:800px;margin:0 auto;position:relative;z-index:1;}
-.au-intro-heading{font-family:'Fraunces',serif;font-size:clamp(2rem,5vw,3.5rem);font-weight:900;color:#fff;letter-spacing:.1em;margin-bottom:1.5rem;}
-.au-intro-sub{font-size:1.1rem;color:#b8c4ff;line-height:1.8;}
+.au-intro-heading{font-family:'Fraunces',serif;font-size:clamp(1.8rem,4vw,2.8rem);font-weight:900;color:#1a1f6e;letter-spacing:-.01em;margin-bottom:1.5rem;text-align:center;position:relative;display:inline-block;}
+.au-intro-heading::after{content:'';display:block;width:72px;height:4px;background:linear-gradient(90deg,#8b1a1a,#c0392b);border-radius:2px;margin:.55rem auto 0;}
+.au-intro-sub{font-size:1.05rem;color:#3a3a5a;line-height:1.8;}
 .au-cards-section{background:linear-gradient(180deg,#eef0ff 0%,#dde1ff 100%);padding:4rem 5rem;}
 .au-cards-grid{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:2rem;}
 .au-card{background:#c8cdff;border-radius:22px;padding:1.75rem;display:flex;flex-direction:column;align-items:center;text-align:center;box-shadow:0 8px 28px rgba(58,64,214,.14);transition:transform .35s,box-shadow .35s;min-height:480px;overflow:hidden;}
@@ -1270,10 +1270,10 @@ main { flex: 1 0 auto; }
 .au-card-img{width:100%;height:100%;object-fit:cover;display:block;}
 .au-card-icons{display:flex;gap:1.25rem;margin-bottom:1.5rem;justify-content:center;align-items:center;height:200px;width:100%;border-radius:14px;background:rgba(255,255,255,0.5);flex-shrink:0;}
 .au-card-icons svg{width:72px;height:72px;}
-.au-card-logos{margin-bottom:1.5rem;display:flex;flex-direction:column;gap:0.6rem;justify-content:center;align-items:center;height:200px;width:100%;border-radius:14px;background:rgba(255,255,255,0.5);padding:1rem;flex-shrink:0;overflow:hidden;}
+.au-card-logos{margin-bottom:1.5rem;display:flex;flex-direction:row;gap:0.75rem;justify-content:center;align-items:center;height:200px;width:100%;border-radius:14px;background:rgba(255,255,255,0.5);padding:1rem;flex-shrink:0;overflow:hidden;}
 .au-logo-row{display:flex;gap:1rem;align-items:center;justify-content:center;flex-wrap:wrap;}
-.au-logo-box{background:#fff;border-radius:10px;padding:.6rem .9rem;display:flex;align-items:center;justify-content:center;}
-.au-logo-box img{max-height:52px;max-width:110px;object-fit:contain;display:block;}
+.au-logo-box{background:#fff;border-radius:10px;padding:.75rem;display:flex;align-items:center;justify-content:center;width:85px;height:85px;flex-shrink:0;border:1px solid #eceeff;box-shadow:0 2px 8px rgba(58,64,214,.1);}
+.au-logo-box img{width:100%;height:100%;object-fit:contain;display:block;}
 .au-card-title{font-size:1.08rem;font-weight:800;color:#1a1f6e;margin-bottom:.75rem;line-height:1.3;letter-spacing:.02em;}
 .au-card-text{font-size:.84rem;color:#2a2d52;line-height:1.75;flex:1;margin-bottom:1.25rem;}
 .au-learn-more{color:#3a40d6;font-weight:700;font-size:.92rem;text-decoration:none;padding-bottom:2px;border-bottom:2px solid transparent;transition:border-color .3s,color .3s;}
@@ -1336,6 +1336,7 @@ main { flex: 1 0 auto; }
         <div class="au-logo-box"><img src="mqa.png" alt="Malaysian Qualifications Agency"></div>
         <div class="au-logo-box"><img src="hd.png" alt="HRD Corp Human Resource Development Corporation"></div>
       </div>
+      <p style="font-size:.75rem;color:#6a6fa8;text-align:center;margin-top:-.75rem;margin-bottom:.5rem;letter-spacing:.05em;text-transform:uppercase;">MOHE &bull; MQA &bull; HRD Corp</p>
       <h3 class="au-card-title">ACCREDITATION<br>&amp; AFFILIATION</h3>
       <p class="au-card-text">Fully accredited by major Malaysian bodies including MOHE and MQA, and recognised internationally. Our graduates hold credentials that open doors worldwide.</p>
       <a href="accreditation.html" class="au-learn-more">Learn More</a>

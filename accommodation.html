@@ -1275,14 +1275,19 @@ main { flex: 1 0 auto; }
 /* ===== ACCOMMODATION PAGE ===== */
 
 /* HERO */
-.acm-hero{display:grid;grid-template-columns:1fr;min-height:320px;overflow:hidden;}
-.acm-hero-text{background:linear-gradient(160deg,#1a1f7a 0%,#2a2fb5 50%,#5a5fe8 100%);padding:4rem 5rem;display:flex;flex-direction:column;justify-content:center;gap:1.25rem;position:relative;overflow:hidden;}
-.acm-hero-text::before{content:'';position:absolute;bottom:-60px;right:-60px;width:220px;height:220px;background:rgba(255,255,255,.06);border-radius:50%;}
-.acm-hero-title{font-family:'Fraunces',serif;font-size:clamp(2rem,4vw,3rem);font-weight:900;color:#fff;line-height:1.1;letter-spacing:-.02em;}
-.acm-hero-sub{font-size:1rem;color:#c8d4ff;line-height:1.75;max-width:380px;}
-.acm-hero-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.85rem 2rem;background:#fff;color:#3a40d6;font-weight:700;font-size:.95rem;border-radius:999px;text-decoration:none;width:fit-content;transition:transform .3s,box-shadow .3s;box-shadow:0 8px 24px rgba(0,0,0,.18);}
-.acm-hero-btn:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(0,0,0,.25);}
-.acm-hero-btn svg{width:15px;height:15px;stroke:#3a40d6;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+.acm-hero{position:relative;overflow:hidden;
+  background:
+    radial-gradient(1100px 500px at 15% 25%, rgba(138, 144, 255, 0.4), transparent 60%),
+    radial-gradient(900px 480px at 85% 70%, rgba(106, 113, 240, 0.28), transparent 60%),
+    linear-gradient(135deg, #e4e6ff 0%, #d0d4ff 55%, #bfc4ff 100%);
+}
+.acm-hero-text{padding:4rem 5rem 3.5rem;display:flex;flex-direction:column;align-items:center;text-align:center;justify-content:center;gap:1.25rem;position:relative;z-index:2;max-width:900px;margin:0 auto;}
+.acm-hero-title{font-family:'Fraunces',serif;font-size:clamp(2.4rem,5.5vw,4rem);font-weight:900;color:#0f1447;line-height:0.98;letter-spacing:-.025em;position:relative;display:inline-block;}
+.acm-hero-title::after{content:'';display:block;width:80px;height:4px;background:linear-gradient(90deg,#8b1a1a,#c0392b);border-radius:2px;margin:.6rem auto 0;}
+.acm-hero-sub{font-size:1.05rem;color:#2a2d52;line-height:1.75;max-width:520px;}
+.acm-hero-btn{display:inline-flex;align-items:center;gap:.6rem;padding:.9rem 2.2rem;background:linear-gradient(135deg,#3a40d6,#5a5fe8);color:#fff;font-weight:700;font-size:.95rem;border-radius:999px;text-decoration:none;width:fit-content;transition:transform .3s,box-shadow .3s;box-shadow:0 8px 24px rgba(58,64,214,.4);}
+.acm-hero-btn:hover{transform:translateY(-3px);box-shadow:0 14px 32px rgba(58,64,214,.55);}
+.acm-hero-btn svg{width:15px;height:15px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
 .acm-hero-photo{overflow:hidden;position:relative;}
 .acm-hero-photo img{position:absolute;top:-15%;left:-15%;width:130%;height:130%;object-fit:cover;object-position:center;}
 
@@ -1292,9 +1297,9 @@ main { flex: 1 0 auto; }
 
 /* ACCOMMODATION OPTIONS */
 .acm-options-section{background:#fff;}
-.acm-room-card{background:#e8eaff;border-radius:22px;padding:2rem;display:grid;grid-template-columns:auto 1fr;gap:2rem;align-items:center;max-width:900px;}
-.acm-room-photos{display:flex;gap:1rem;}
-.acm-room-photo{width:160px;height:130px;border-radius:14px;overflow:hidden;flex-shrink:0;}
+.acm-room-card{background:#e8eaff;border-radius:22px;padding:2rem;display:grid;grid-template-columns:auto 1fr;gap:2rem;align-items:center;max-width:1000px;}
+.acm-room-photos{display:flex;gap:1.25rem;}
+.acm-room-photo{width:260px;height:280px;border-radius:14px;overflow:hidden;flex-shrink:0;box-shadow:0 8px 24px rgba(58,64,214,.18);}
 .acm-room-photo img{width:100%;height:100%;object-fit:cover;}
 .acm-room-info{}
 .acm-room-name{font-size:1.25rem;font-weight:800;color:#3a40d6;margin-bottom:.75rem;}
@@ -1349,14 +1354,14 @@ main { flex: 1 0 auto; }
 
 /* RESPONSIVE */
 @media(max-width:960px){
-  .acm-hero{grid-template-columns:1fr;}
+  .acm-hero-text{padding:2.5rem 1.5rem 2.5rem;}
   .acm-hero-photo{min-height:280px;}
   .acm-section,.acm-split-section,.acm-fee-section{padding-left:1.5rem;padding-right:1.5rem;}
   .acm-split-inner,.acm-fee-inner{grid-template-columns:1fr;}
   .acm-fac-grid{grid-template-columns:1fr;}
   .acm-room-card{grid-template-columns:1fr;}
   .acm-room-photos{flex-direction:column;}
-  .acm-room-photo{width:100%;height:200px;}
+  .acm-room-photo{width:100%;height:260px;}
 }
 </style>
 
