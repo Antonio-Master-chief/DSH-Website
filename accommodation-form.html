@@ -1816,12 +1816,12 @@ document.getElementById('acm-form').addEventListener('submit', function(e) {
 });
 
 // Intersection observer for reveal
-const io = new IntersectionObserver(function(entries) {
+const acmReveal = new IntersectionObserver(function(entries) {
   entries.forEach(function(e) {
-    if (e.isIntersecting) { e.target.classList.add('in-view'); io.unobserve(e.target); }
+    if (e.isIntersecting) { e.target.classList.add('in-view'); acmReveal.unobserve(e.target); }
   });
 }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
-document.querySelectorAll('[data-reveal], [data-reveal-stagger]').forEach(function(el) { io.observe(el); });
+document.querySelectorAll('[data-reveal], [data-reveal-stagger]').forEach(function(el) { acmReveal.observe(el); });
 </script>
 
 </body>

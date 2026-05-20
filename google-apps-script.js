@@ -130,11 +130,13 @@ function processEnrollment(data) {
 
   styleStatusCell(sheet, sheet.getLastRow(), 17); // col Q = Status
 
-  var sheetUrl = 'https://docs.google.com/spreadsheets/d/' + CONFIG.ENROLLMENT_SPREADSHEET_ID;
+  var sheetUrl     = 'https://docs.google.com/spreadsheets/d/' + CONFIG.ENROLLMENT_SPREADSHEET_ID;
+  var driveFolderUrl = hasDrive ? 'https://drive.google.com/drive/folders/' + CONFIG.DRIVE_FOLDER_ID : '';
   sendWhatsApp('📋 *NEW ENROLMENT — DIT*\n────────────────────\n' +
     '👤 ' + (data.fullName || '') + '\n📧 ' + (data.email || '') + '\n📱 ' + (data.phone || '') +
     '\n🌏 ' + (data.nationality || '') + '\n🎓 ' + (data.programme || '') + '\n📅 ' + ts +
-    '\n────────────────────\n📊 ' + sheetUrl);
+    '\n────────────────────\n📊 ' + sheetUrl +
+    (driveFolderUrl ? '\n📁 Uploaded Files: ' + driveFolderUrl : ''));
   sendEmail('📋 New Enrolment: ' + (data.fullName || 'Student') + ' — DIT',
     buildEmailHtml('📋 New Enrolment — DIT', [
       ['Full Name',       data.fullName    || ''],
@@ -149,7 +151,7 @@ function processEnrollment(data) {
       ['Heard About Us',  data.source      || ''],
       ['Message',         data.message     || ''],
       ['Submitted',       ts]
-    ], sheetUrl));
+    ], sheetUrl, driveFolderUrl));
 }
 
 // ── Enquiry handler ─────────────────────────────────────────────
@@ -231,16 +233,19 @@ function processAccommodation(data) {
 
 // ── Email builder ───────────────────────────────────────────────
 
-function buildEmailHtml(title, rows, sheetUrl) {
+function buildEmailHtml(title, rows, sheetUrl, driveFolderUrl) {
   var rowsHtml = rows.map(function(r) {
     return '<tr><td style="padding:8px 12px 8px 0;color:#555;width:40%;vertical-align:top"><b>' +
            r[0] + '</b></td><td style="padding:8px 0">' + r[1] + '</td></tr>';
   }).join('');
+  var driveBtn = driveFolderUrl
+    ? ' <a href="' + driveFolderUrl + '" style="background:#1e7e34;color:#fff;padding:10px 20px;border-radius:5px;text-decoration:none;font-size:14px;margin-left:8px;">📁 View Uploaded Files</a>'
+    : '';
   return '<div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;border:1px solid #ddd;border-radius:8px;overflow:hidden">' +
     '<div style="background:#1a2063;padding:20px 24px"><h2 style="color:#fff;margin:0;font-size:18px">' + title + '</h2></div>' +
     '<div style="padding:24px;background:#fff"><table style="width:100%;border-collapse:collapse;font-size:14px">' + rowsHtml + '</table>' +
     '<div style="margin-top:20px"><a href="' + sheetUrl + '" style="background:#1a2063;color:#fff;padding:10px 20px;border-radius:5px;text-decoration:none;font-size:14px">View Spreadsheet</a>' +
-    '</div></div></div>';
+    driveBtn + '</div></div></div>';
 }
 
 // ── WhatsApp ────────────────────────────────────────────────────
@@ -332,6 +337,24 @@ function setupAccommodationSheet() {
 }
 
 // ── Accommodation diagnostics — run from script editor ──────────
+
+function testDriveAccess() {
+  try {
+    Logger.log('Drive folder ID in script: ' + CONFIG.DRIVE_FOLDER_ID);
+    if (CONFIG.DRIVE_FOLDER_ID.indexOf('PASTE') !== -1) {
+      Logger.log('ERROR: Drive folder ID is still the placeholder. Update CONFIG.DRIVE_FOLDER_ID first.');
+      return;
+    }
+    var folder = DriveApp.getFolderById(CONFIG.DRIVE_FOLDER_ID);
+    Logger.log('Folder name: ' + folder.getName());
+    var testFile = folder.createFile('DSH_test_access.txt', 'Drive access test — delete me.', 'text/plain');
+    Logger.log('SUCCESS — test file created: ' + testFile.getUrl());
+    Logger.log('If you see the file in Drive, the folder is accessible. Delete it manually.');
+  } catch (err) {
+    Logger.log('ERROR: ' + err.toString());
+    Logger.log('This means the script cannot access the Drive folder. Make sure the folder is shared with admissions@dit.edu.my as Editor.');
+  }
+}
 
 function testAccommodationWrite() {
   try {
