@@ -1416,6 +1416,9 @@ main { flex: 1 0 auto; }
 .latest-dot { width:6px; height:6px; border-radius:50%; background:rgba(255,255,255,0.35); cursor:pointer; transition:background .3s,transform .3s; }
 .latest-dot.active { background:#fff; transform:scale(1.4); }
 .latest-sub-text { color:rgba(255,255,255,0.75); font-size:1rem; line-height:1.6; margin-top:0.8rem; }
+/* Image slide variant — replaces the icon box when a slide uses a photo */
+.slide-img-panel { flex-shrink:0; width:130px; height:108px; border-radius:12px; overflow:hidden; background:#0f1447; }
+.slide-img-panel img { width:100%; height:100%; object-fit:cover; object-position:center; display:block; }
 @media(max-width:900px){ .latest-inner{grid-template-columns:1fr;gap:2rem;} }
 
 .p-card-media{aspect-ratio:unset!important;height:240px!important;overflow:hidden!important;position:relative!important;flex-shrink:0;background:#1a1f7a;min-height:240px;}
@@ -1628,7 +1631,156 @@ main { flex: 1 0 auto; }
             <a class="slide-cta" href="tvet-post-natal-care.html">Discover the Programme <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
           </div>
         </div>
-        <!-- Add more slides here -->
+        <!-- ═══════════════════════════════════════════════════════════════
+             IMAGE SLIDES — HOW TO ADD A NEW SLIDE WITH A PHOTO:
+             1. Find the slide number you want (SLIDE 1, SLIDE 2, etc.)
+             2. Delete the opening  <!--  and closing  -->  of that block
+             3. Replace  YOUR_IMAGE_X.jpg  with your actual image filename
+             4. Put the image file in the same folder as this HTML file
+             5. Update the tag, title, description, and link href
+             No other changes needed — the image will auto-fit perfectly.
+        ════════════════════════════════════════════════════════════════ -->
+
+        <!-- IMAGE SLIDE 1 — delete this comment line and the closing one to activate
+        <div class="latest-slide">
+          <div class="slide-img-panel">
+            <img src="YOUR_IMAGE_1.jpg" alt="Describe image 1 here">
+          </div>
+          <div class="slide-body">
+            <span class="slide-tag">ACTIVITY</span>
+            <h4 class="slide-heading">Event or Activity Title Here</h4>
+            <p class="slide-desc">Brief description of this event, achievement, or campus activity at DIT.</p>
+            <a class="slide-cta" href="#">Read More <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          </div>
+        </div>
+        -->
+
+        <!-- IMAGE SLIDE 2 — delete this comment line and the closing one to activate
+        <div class="latest-slide">
+          <div class="slide-img-panel">
+            <img src="YOUR_IMAGE_2.jpg" alt="Describe image 2 here">
+          </div>
+          <div class="slide-body">
+            <span class="slide-tag">ACTIVITY</span>
+            <h4 class="slide-heading">Event or Activity Title Here</h4>
+            <p class="slide-desc">Brief description of this event, achievement, or campus activity at DIT.</p>
+            <a class="slide-cta" href="#">Read More <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          </div>
+        </div>
+        -->
+
+        <!-- IMAGE SLIDE 3 — delete this comment line and the closing one to activate
+        <div class="latest-slide">
+          <div class="slide-img-panel">
+            <img src="YOUR_IMAGE_3.jpg" alt="Describe image 3 here">
+          </div>
+          <div class="slide-body">
+            <span class="slide-tag">ACTIVITY</span>
+            <h4 class="slide-heading">Event or Activity Title Here</h4>
+            <p class="slide-desc">Brief description of this event, achievement, or campus activity at DIT.</p>
+            <a class="slide-cta" href="#">Read More <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          </div>
+        </div>
+        -->
+
+        <!-- IMAGE SLIDE 4 — delete this comment line and the closing one to activate
+        <div class="latest-slide">
+          <div class="slide-img-panel">
+            <img src="YOUR_IMAGE_4.jpg" alt="Describe image 4 here">
+          </div>
+          <div class="slide-body">
+            <span class="slide-tag">ACTIVITY</span>
+            <h4 class="slide-heading">Event or Activity Title Here</h4>
+            <p class="slide-desc">Brief description of this event, achievement, or campus activity at DIT.</p>
+            <a class="slide-cta" href="#">Read More <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          </div>
+        </div>
+        -->
+
+        <!-- IMAGE SLIDE 5 — delete this comment line and the closing one to activate
+        <div class="latest-slide">
+          <div class="slide-img-panel">
+            <img src="YOUR_IMAGE_5.jpg" alt="Describe image 5 here">
+          </div>
+          <div class="slide-body">
+            <span class="slide-tag">ACTIVITY</span>
+            <h4 class="slide-heading">Event or Activity Title Here</h4>
+            <p class="slide-desc">Brief description of this event, achievement, or campus activity at DIT.</p>
+            <a class="slide-cta" href="#">Read More <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          </div>
+        </div>
+        -->
+
+        <!-- IMAGE SLIDE 6 — delete this comment line and the closing one to activate
+        <div class="latest-slide">
+          <div class="slide-img-panel">
+            <img src="YOUR_IMAGE_6.jpg" alt="Describe image 6 here">
+          </div>
+          <div class="slide-body">
+            <span class="slide-tag">ACTIVITY</span>
+            <h4 class="slide-heading">Event or Activity Title Here</h4>
+            <p class="slide-desc">Brief description of this event, achievement, or campus activity at DIT.</p>
+            <a class="slide-cta" href="#">Read More <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          </div>
+        </div>
+        -->
+
+        <!-- IMAGE SLIDE 7 — delete this comment line and the closing one to activate
+        <div class="latest-slide">
+          <div class="slide-img-panel">
+            <img src="YOUR_IMAGE_7.jpg" alt="Describe image 7 here">
+          </div>
+          <div class="slide-body">
+            <span class="slide-tag">ACTIVITY</span>
+            <h4 class="slide-heading">Event or Activity Title Here</h4>
+            <p class="slide-desc">Brief description of this event, achievement, or campus activity at DIT.</p>
+            <a class="slide-cta" href="#">Read More <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          </div>
+        </div>
+        -->
+
+        <!-- IMAGE SLIDE 8 — delete this comment line and the closing one to activate
+        <div class="latest-slide">
+          <div class="slide-img-panel">
+            <img src="YOUR_IMAGE_8.jpg" alt="Describe image 8 here">
+          </div>
+          <div class="slide-body">
+            <span class="slide-tag">ACTIVITY</span>
+            <h4 class="slide-heading">Event or Activity Title Here</h4>
+            <p class="slide-desc">Brief description of this event, achievement, or campus activity at DIT.</p>
+            <a class="slide-cta" href="#">Read More <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          </div>
+        </div>
+        -->
+
+        <!-- IMAGE SLIDE 9 — delete this comment line and the closing one to activate
+        <div class="latest-slide">
+          <div class="slide-img-panel">
+            <img src="YOUR_IMAGE_9.jpg" alt="Describe image 9 here">
+          </div>
+          <div class="slide-body">
+            <span class="slide-tag">ACTIVITY</span>
+            <h4 class="slide-heading">Event or Activity Title Here</h4>
+            <p class="slide-desc">Brief description of this event, achievement, or campus activity at DIT.</p>
+            <a class="slide-cta" href="#">Read More <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          </div>
+        </div>
+        -->
+
+        <!-- IMAGE SLIDE 10 — delete this comment line and the closing one to activate
+        <div class="latest-slide">
+          <div class="slide-img-panel">
+            <img src="YOUR_IMAGE_10.jpg" alt="Describe image 10 here">
+          </div>
+          <div class="slide-body">
+            <span class="slide-tag">ACTIVITY</span>
+            <h4 class="slide-heading">Event or Activity Title Here</h4>
+            <p class="slide-desc">Brief description of this event, achievement, or campus activity at DIT.</p>
+            <a class="slide-cta" href="#">Read More <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+          </div>
+        </div>
+        -->
+
       </div>
       <div class="latest-dots"></div>
     </div>
