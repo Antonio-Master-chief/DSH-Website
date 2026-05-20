@@ -2527,7 +2527,8 @@ function handleSubmit(e) {
       dob: payload.dob, nationality: payload.nationality, programme: payload.programme,
       education: payload.education, source: payload.source, message: payload.message
     };
-    if (payload.healthFile) urlPayload.hasPdfs = true;
+    if (payload.healthFile) urlPayload.healthFile = payload.healthFile;
+    if (payload.regFile)    urlPayload.regFile    = payload.regFile;
     fetch(APPS_SCRIPT_URL, {
       method: 'POST',
       mode: 'no-cors',
