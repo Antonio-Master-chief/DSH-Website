@@ -1297,21 +1297,21 @@ main { flex: 1 0 auto; }
 
 /* ACCOMMODATION OPTIONS */
 .acm-options-section{background:#fff;}
-.acm-room-card{background:#e8eaff;border-radius:22px;overflow:hidden;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:0;align-items:stretch;max-width:1000px;}
-.acm-room-photos{display:flex;gap:2px;height:100%;}
-.acm-room-photo{flex:1;min-width:0;min-height:300px;}
+.acm-room-card{background:#e8eaff;border-radius:22px;overflow:hidden;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:0;max-width:1000px;}
+.acm-room-photos{display:flex;}
+.acm-room-photo{flex:1;min-width:0;height:320px;}
 .acm-room-photo img{width:100%;height:100%;object-fit:cover;display:block;}
-.acm-room-info{padding:2rem;}
+.acm-room-info{padding:2rem;display:flex;flex-direction:column;justify-content:center;}
 .acm-room-name{font-size:1.25rem;font-weight:800;color:#3a40d6;margin-bottom:.75rem;}
 .acm-room-feature{font-size:.92rem;color:#2a2d52;line-height:1.7;display:flex;align-items:center;gap:.6rem;margin-bottom:.4rem;}
 .acm-room-feature::before{content:'';width:6px;height:6px;border-radius:50%;background:#8a90ff;flex-shrink:0;}
 
 /* FACILITIES */
 .acm-facilities-section{background:linear-gradient(180deg,#f4f5ff 0%,#eceeff 100%);}
-.acm-fac-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.75rem;max-width:1100px;}
+.acm-fac-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.75rem;max-width:1100px;margin:0 auto;align-items:start;}
 .acm-fac-card{background:#fff;border-radius:18px;overflow:hidden;box-shadow:0 5px 20px rgba(58,64,214,.1);transition:transform .3s,box-shadow .3s;}
 .acm-fac-card:hover{transform:translateY(-5px);box-shadow:0 16px 36px rgba(58,64,214,.18);}
-.acm-fac-img{width:100%;height:180px;object-fit:cover;display:block;object-position:center;}
+.acm-fac-img{width:100%;height:220px;object-fit:cover;display:block;object-position:center;}
 .acm-fac-body{padding:1.25rem;text-align:center;}
 .acm-fac-name{font-size:1.05rem;font-weight:700;color:#1a1f6e;margin-bottom:.5rem;}
 .acm-fac-desc{font-size:.86rem;color:#5a5fe8;line-height:1.6;}
@@ -1360,8 +1360,8 @@ main { flex: 1 0 auto; }
   .acm-split-inner,.acm-fee-inner{grid-template-columns:1fr;}
   .acm-fac-grid{grid-template-columns:1fr;}
   .acm-room-card{grid-template-columns:1fr;}
-  .acm-room-photos{flex-direction:column;height:auto;}
-  .acm-room-photo{min-height:0;height:220px;}
+  .acm-room-photos{flex-direction:column;}
+  .acm-room-photo{height:200px;}
 }
 </style>
 
