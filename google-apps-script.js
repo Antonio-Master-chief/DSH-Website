@@ -48,7 +48,7 @@ function doPost(e) {
 // ── Headers ─────────────────────────────────────────────────────
 
 var ENR_HEADERS = [
-  '#','Timestamp','Full Name','Email','Phone','ID Type','ID Number',
+  '#','Timestamp','Lead Source','Full Name','Email','Phone','ID Type','ID Number',
   'Date of Birth','Nationality','Programme','Education Level',
   'Heard About Us','Message','Student Type',
   'Health Declaration (Drive)','Registration Form (Drive)',
@@ -111,6 +111,7 @@ function processEnrollment(data) {
   sheet.appendRow([
     rowNum,
     ts,
+    data.leadSource  || 'Web',
     data.fullName    || '',
     data.email       || '',
     data.phone       || '',
@@ -128,7 +129,7 @@ function processEnrollment(data) {
     'Pending', '', ''
   ]);
 
-  styleStatusCell(sheet, sheet.getLastRow(), 17); // col Q = Status
+  styleStatusCell(sheet, sheet.getLastRow(), 18); // col R = Status
 
   var sheetUrl     = 'https://docs.google.com/spreadsheets/d/' + CONFIG.ENROLLMENT_SPREADSHEET_ID;
   var driveFolderUrl = hasDrive ? 'https://drive.google.com/drive/folders/' + CONFIG.DRIVE_FOLDER_ID : '';
@@ -285,17 +286,19 @@ function setupEnrollmentSheet() {
   var sh = ss.getSheetByName('Enrollments') || ss.insertSheet('Enrollments');
   var hdr = sh.getRange(1, 1, 1, ENR_HEADERS.length);
   hdr.setValues([ENR_HEADERS]).setFontWeight('bold').setFontColor('#ffffff');
-  // Color groups: # = grey | info = navy | Programme = blue | admin = green
+  // Color groups: # = grey | Timestamp = navy | LeadSource = teal | info = navy | Programme = blue | admin = green
   sh.getRange(1,1).setBackground('#546e7a');                          // #
-  sh.getRange(1,2,1,8).setBackground('#1a1d2e');                      // Timestamp → Nationality
-  sh.getRange(1,10).setBackground('#1565c0');                         // Programme (highlight)
-  sh.getRange(1,11,1,6).setBackground('#1a1d2e');                     // Edu Level → Reg Form
-  sh.getRange(1,17,1,3).setBackground('#2e7d32');                     // Status → Date Checked
+  sh.getRange(1,2).setBackground('#1a1d2e');                          // Timestamp
+  sh.getRange(1,3).setBackground('#00695c');                          // Lead Source (teal)
+  sh.getRange(1,4,1,7).setBackground('#1a1d2e');                      // Full Name → Nationality
+  sh.getRange(1,11).setBackground('#1565c0');                         // Programme (highlight)
+  sh.getRange(1,12,1,6).setBackground('#1a1d2e');                     // Edu Level → Reg Form
+  sh.getRange(1,18,1,3).setBackground('#2e7d32');                     // Status → Date Checked
   sh.setFrozenRows(1);
-  // Column widths: #, Timestamp, Name, Email, Phone, IDType, IDNum, DOB, Nationality,
+  // Column widths: #, Timestamp, LeadSource, Name, Email, Phone, IDType, IDNum, DOB, Nationality,
   //   Programme, EduLevel, HeardAbout, Message, StudentType, HealthDec, RegForm,
   //   Status, AdminNotes, DateChecked
-  var w = [45,150,180,210,120,80,140,110,110, 280,140,160,270,100,220,220, 110,240,120];
+  var w = [45,150,100, 180,210,120,80,140,110,110, 280,140,160,270,100,220,220, 110,240,120];
   w.forEach(function(width, i) { sh.setColumnWidth(i+1, width); });
   Logger.log('Enrollment sheet headers and widths updated!');
 }
