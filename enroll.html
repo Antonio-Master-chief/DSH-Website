@@ -2167,6 +2167,7 @@ Malaysia.</div>
             <option>Zambian</option>
             <option>Zimbabwean</option>
           </select>
+          <p class="enr-field-error" id="nationality-error"></p>
         </div>
         <div class="enr-field">
           <label>Date of Birth <span>*</span></label>
@@ -2205,6 +2206,7 @@ Malaysia.</div>
             <option>SKM – Post-Natal Care (New)</option>
           </optgroup>
         </select>
+        <p class="enr-field-error" id="programme-error"></p>
       </div>
 
       <!-- How did you hear -->
@@ -2213,7 +2215,10 @@ Malaysia.</div>
         <select id="source">
           <option value="" disabled selected>Select an option</option>
           <option>Google / Search Engine</option>
-          <option>Social Media (Facebook, Instagram, TikTok)</option>
+          <option>Facebook</option>
+          <option>Instagram</option>
+          <option>TikTok</option>
+          <option>YouTube</option>
           <option>Friend or Family Referral</option>
           <option>School Counsellor / Teacher</option>
           <option>Education Fair or Exhibition</option>
@@ -2236,6 +2241,7 @@ Malaysia.</div>
           <option>Degree / Bachelor</option>
           <option>Other</option>
         </select>
+        <p class="enr-field-error" id="education-error"></p>
       </div>
 
       <!-- Message -->
@@ -2268,11 +2274,13 @@ Malaysia.</div>
           <div class="intl-upload-grid">
             <div>
               <label class="intl-upload-lbl" for="healthFile">Completed Health Declaration Form <span style="color:#e8002d;">*</span></label>
-              <input class="intl-upload-input" type="file" id="healthFile" accept=".pdf,.jpg,.jpeg,.png">
+              <input class="intl-upload-input" type="file" id="healthFile" accept=".pdf,.jpg,.jpeg,.png" onchange="clearFileError('health-file-error')">
+              <p class="enr-field-error" id="health-file-error">Please upload the completed Health Declaration Form.</p>
             </div>
             <div>
               <label class="intl-upload-lbl" for="registrationFile">Completed Registration Form 2026 <span style="color:#e8002d;">*</span></label>
-              <input class="intl-upload-input" type="file" id="registrationFile" accept=".pdf,.jpg,.jpeg,.png">
+              <input class="intl-upload-input" type="file" id="registrationFile" accept=".pdf,.jpg,.jpeg,.png" onchange="clearFileError('reg-file-error')">
+              <p class="enr-field-error" id="reg-file-error">Please upload the completed Registration Form 2026.</p>
             </div>
           </div>
           <p class="intl-upload-err" id="intl-upload-err">
@@ -2303,10 +2311,11 @@ Malaysia.</div>
             I have fully read and agree to the Declaration and Terms &amp; Conditions of DSH Institute of Technology. I confirm all information submitted is true and accurate.
           </span>
         </label>
+        <p class="enr-field-error" id="tnc-error" style="margin-top:0.5rem;">Please read and tick the box to agree to our Terms &amp; Conditions before submitting.</p>
       </div>
 
       <div class="enr-submit-row" style="margin-top:1.5rem;">
-        <button type="submit" class="enr-submit-btn" id="submitBtn" disabled>
+        <button type="submit" class="enr-submit-btn" id="submitBtn">
           Submit Enquiry
           <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </button>
@@ -2429,7 +2438,13 @@ function selectIdType(type) {
 }
 
 function onTncCheck(cb) {
-  document.getElementById('submitBtn').disabled = !cb.checked;
+  var err = document.getElementById('tnc-error');
+  if (err) err.classList.toggle('visible', !cb.checked && err.classList.contains('visible'));
+}
+
+function clearFileError(errorId) {
+  var err = document.getElementById(errorId);
+  if (err) err.classList.remove('visible');
 }
 
 document.getElementById('nationality').addEventListener('change', function(){
@@ -2440,6 +2455,18 @@ document.getElementById('nationality').addEventListener('change', function(){
     sec.classList.remove('visible');
     document.getElementById('intl-upload-err').classList.remove('visible');
   }
+  this.closest('.enr-field').classList.remove('has-error');
+  var err = document.getElementById('nationality-error');
+  if (err) err.classList.remove('visible');
+});
+
+['programme','education'].forEach(function(id){
+  var el = document.getElementById(id);
+  if (el) el.addEventListener('change', function(){
+    this.closest('.enr-field').classList.remove('has-error');
+    var err = document.getElementById(id + '-error');
+    if (err) err.classList.remove('visible');
+  });
 });
 
 (function(){
@@ -2469,31 +2496,49 @@ function handleSubmit(e) {
 
   if (!showFieldError('dob','dob-error', validateDOB(document.getElementById('dob').value))) ok=false;
 
-  ['nationality','programme','education'].forEach(function(id){
-    var el = document.getElementById(id);
-    if (el && !el.value) { el.closest('.enr-field').classList.add('has-error'); ok=false; }
-    else if (el) el.closest('.enr-field').classList.remove('has-error');
+  var selectErrors = {
+    nationality: 'Please select your nationality.',
+    programme:   'Please select a programme.',
+    education:   'Please select your education level.'
+  };
+  Object.keys(selectErrors).forEach(function(id){
+    var el  = document.getElementById(id);
+    var err = document.getElementById(id + '-error');
+    if (el && !el.value) {
+      el.closest('.enr-field').classList.add('has-error');
+      if (err) { err.innerHTML = ERR_ICON + selectErrors[id]; err.classList.add('visible'); }
+      ok = false;
+    } else if (el) {
+      el.closest('.enr-field').classList.remove('has-error');
+      if (err) err.classList.remove('visible');
+    }
   });
 
-  if (!document.getElementById('tncCheck').checked) ok=false;
-
   var isIntl = document.getElementById('nationality').value !== 'Malaysian';
+  if (isIntl) {
+    var f1   = document.getElementById('healthFile').files[0];
+    var f2   = document.getElementById('registrationFile').files[0];
+    var hErr = document.getElementById('health-file-error');
+    var rErr = document.getElementById('reg-file-error');
+    if (!f1) { if (hErr) hErr.classList.add('visible'); ok = false; }
+    else     { if (hErr) hErr.classList.remove('visible'); }
+    if (!f2) { if (rErr) rErr.classList.add('visible'); ok = false; }
+    else     { if (rErr) rErr.classList.remove('visible'); }
+    document.getElementById('intl-upload-err').classList.remove('visible');
+  }
+
+  var tncErr = document.getElementById('tnc-error');
+  if (!document.getElementById('tncCheck').checked) {
+    if (tncErr) { tncErr.innerHTML = ERR_ICON + 'Please read and tick the box to agree to our Terms &amp; Conditions.'; tncErr.classList.add('visible'); }
+    ok = false;
+  } else {
+    if (tncErr) tncErr.classList.remove('visible');
+  }
 
   if (!ok) {
     var first = document.querySelector('.enr-field.has-error, .enr-field-error.visible, #id-prompt.visible');
     if (first) first.scrollIntoView({behavior:'smooth',block:'center'});
     return;
-  }
-
-  if(isIntl){
-    var f1 = document.getElementById('healthFile').files[0];
-    var f2 = document.getElementById('registrationFile').files[0];
-    if(!f1 || !f2){
-      document.getElementById('intl-upload-err').classList.add('visible');
-      document.getElementById('intl-docs-section').scrollIntoView({behavior:'smooth',block:'center'});
-      return;
-    }
-    document.getElementById('intl-upload-err').classList.remove('visible');
   }
 
   var btn  = document.getElementById('submitBtn');
@@ -2608,15 +2653,29 @@ function showChoiceSection() {
 // ── General enquiry submission ────────────────────────────
 function submitGeneralEnquiry(e) {
   e.preventDefault();
+  var ok = true;
+  if (!showFieldError('gen-name',    'gen-name-error',    validateName(document.getElementById('gen-name').value)))    ok = false;
+  if (!showFieldError('gen-email',   'gen-email-error',   validateEmail(document.getElementById('gen-email').value)))  ok = false;
+  if (!showFieldError('gen-phone',   'gen-phone-error',   validatePhone(document.getElementById('gen-phone').value)))  ok = false;
+  var msg = document.getElementById('gen-message').value.trim();
+  var msgErr = document.getElementById('gen-message-error');
+  if (!msg) {
+    document.getElementById('gen-message').closest('.enr-field').classList.add('has-error');
+    if (msgErr) { msgErr.innerHTML = ERR_ICON + 'Please enter your message.'; msgErr.classList.add('visible'); }
+    ok = false;
+  } else {
+    document.getElementById('gen-message').closest('.enr-field').classList.remove('has-error');
+    if (msgErr) msgErr.classList.remove('visible');
+  }
+  if (!ok) {
+    var first = document.querySelector('.enr-field.has-error, .enr-field-error.visible');
+    if (first) first.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
   var name    = document.getElementById('gen-name').value.trim();
   var email   = document.getElementById('gen-email').value.trim();
   var phone   = document.getElementById('gen-phone').value.trim();
   var message = document.getElementById('gen-message').value.trim();
-
-  if (!name || !email || !phone || !message) {
-    alert('Please fill in all required fields.');
-    return;
-  }
 
   var btn = document.getElementById('genSubmitBtn');
   btn.disabled = true;
@@ -2656,22 +2715,26 @@ function submitGeneralEnquiry(e) {
         <div class="enr-form-row">
           <div class="enr-field">
             <label>Full Name <span>*</span></label>
-            <input type="text" id="gen-name" placeholder="e.g. Ahmad bin Abdullah" required>
+            <input type="text" id="gen-name" placeholder="e.g. Ahmad bin Abdullah" required oninput="clearFieldError('gen-name','gen-name-error')">
+            <p class="enr-field-error" id="gen-name-error"></p>
           </div>
           <div class="enr-field">
             <label>Email Address <span>*</span></label>
-            <input type="email" id="gen-email" placeholder="e.g. ahmad@email.com" required>
+            <input type="email" id="gen-email" placeholder="e.g. ahmad@email.com" required oninput="clearFieldError('gen-email','gen-email-error')">
+            <p class="enr-field-error" id="gen-email-error"></p>
           </div>
         </div>
 
         <div class="enr-field">
           <label>Phone Number <span>*</span></label>
-          <input type="tel" id="gen-phone" placeholder="e.g. 012-345 6789" required>
+          <input type="tel" id="gen-phone" placeholder="e.g. 012-345 6789" required oninput="clearFieldError('gen-phone','gen-phone-error')">
+          <p class="enr-field-error" id="gen-phone-error"></p>
         </div>
 
         <div class="enr-field">
           <label>Your Enquiry <span>*</span></label>
-          <textarea id="gen-message" placeholder="Type your question or message here — about programmes, fees, entry requirements, campus life, or anything else…" style="min-height:160px;" required></textarea>
+          <textarea id="gen-message" placeholder="Type your question or message here — about programmes, fees, entry requirements, campus life, or anything else…" style="min-height:160px;" required oninput="clearFieldError('gen-message','gen-message-error')"></textarea>
+          <p class="enr-field-error" id="gen-message-error"></p>
         </div>
 
         <div class="enr-divider"></div>

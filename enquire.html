@@ -1363,17 +1363,20 @@ main { flex: 1 0 auto; }
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
         <div>
           <label style="display:block;font-size:0.83rem;font-weight:700;color:#0c1044;letter-spacing:.05em;text-transform:uppercase;margin-bottom:0.45rem;">Full Name <span style="color:#e53e3e;">*</span></label>
-          <input type="text" id="eq-name" required placeholder="e.g. Ahmad Syafiq" style="width:100%;padding:0.85rem 1.1rem;border:2px solid #e0e4ff;border-radius:10px;font-size:0.95rem;color:#0c1044;background:#fafbff;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='#3a40d6'" onblur="this.style.borderColor='#e0e4ff'">
+          <input type="text" id="eq-name" required placeholder="e.g. Ahmad Syafiq" style="width:100%;padding:0.85rem 1.1rem;border:2px solid #e0e4ff;border-radius:10px;font-size:0.95rem;color:#0c1044;background:#fafbff;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='#3a40d6'" onblur="this.style.borderColor='#e0e4ff'" oninput="eqClearErr('eq-name','eq-name-err')">
+          <p id="eq-name-err" class="eq-err"></p>
         </div>
         <div>
           <label style="display:block;font-size:0.83rem;font-weight:700;color:#0c1044;letter-spacing:.05em;text-transform:uppercase;margin-bottom:0.45rem;">Email Address <span style="color:#e53e3e;">*</span></label>
-          <input type="email" id="eq-email" required placeholder="you@example.com" style="width:100%;padding:0.85rem 1.1rem;border:2px solid #e0e4ff;border-radius:10px;font-size:0.95rem;color:#0c1044;background:#fafbff;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='#3a40d6'" onblur="this.style.borderColor='#e0e4ff'">
+          <input type="email" id="eq-email" required placeholder="you@example.com" style="width:100%;padding:0.85rem 1.1rem;border:2px solid #e0e4ff;border-radius:10px;font-size:0.95rem;color:#0c1044;background:#fafbff;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='#3a40d6'" onblur="this.style.borderColor='#e0e4ff'" oninput="eqClearErr('eq-email','eq-email-err')">
+          <p id="eq-email-err" class="eq-err"></p>
         </div>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;">
         <div>
           <label style="display:block;font-size:0.83rem;font-weight:700;color:#0c1044;letter-spacing:.05em;text-transform:uppercase;margin-bottom:0.45rem;">Phone Number <span style="color:#e53e3e;">*</span></label>
-          <input type="tel" id="eq-phone" required placeholder="+60 12-345 6789" style="width:100%;padding:0.85rem 1.1rem;border:2px solid #e0e4ff;border-radius:10px;font-size:0.95rem;color:#0c1044;background:#fafbff;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='#3a40d6'" onblur="this.style.borderColor='#e0e4ff'">
+          <input type="tel" id="eq-phone" required placeholder="+60 12-345 6789" style="width:100%;padding:0.85rem 1.1rem;border:2px solid #e0e4ff;border-radius:10px;font-size:0.95rem;color:#0c1044;background:#fafbff;outline:none;box-sizing:border-box;" onfocus="this.style.borderColor='#3a40d6'" onblur="this.style.borderColor='#e0e4ff'" oninput="eqClearErr('eq-phone','eq-phone-err')">
+          <p id="eq-phone-err" class="eq-err"></p>
         </div>
         <div>
           <label style="display:block;font-size:0.83rem;font-weight:700;color:#0c1044;letter-spacing:.05em;text-transform:uppercase;margin-bottom:0.45rem;">Programme of Interest</label>
@@ -1389,7 +1392,8 @@ main { flex: 1 0 auto; }
       </div>
       <div>
         <label style="display:block;font-size:0.83rem;font-weight:700;color:#0c1044;letter-spacing:.05em;text-transform:uppercase;margin-bottom:0.45rem;">Your Message <span style="color:#e53e3e;">*</span></label>
-        <textarea id="eq-msg" required rows="5" placeholder="Tell us what you would like to know..." style="width:100%;padding:0.85rem 1.1rem;border:2px solid #e0e4ff;border-radius:10px;font-size:0.95rem;color:#0c1044;background:#fafbff;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;" onfocus="this.style.borderColor='#3a40d6'" onblur="this.style.borderColor='#e0e4ff'"></textarea>
+        <textarea id="eq-msg" required rows="5" placeholder="Tell us what you would like to know..." style="width:100%;padding:0.85rem 1.1rem;border:2px solid #e0e4ff;border-radius:10px;font-size:0.95rem;color:#0c1044;background:#fafbff;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;" onfocus="this.style.borderColor='#3a40d6'" onblur="this.style.borderColor='#e0e4ff'" oninput="eqClearErr('eq-msg','eq-msg-err')"></textarea>
+        <p id="eq-msg-err" class="eq-err"></p>
       </div>
       <div>
         <button type="submit" class="btn-primary" style="width:100%;justify-content:center;font-size:1rem;padding:1rem;">Send Enquiry <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></button>
@@ -1404,15 +1408,53 @@ main { flex: 1 0 auto; }
     <div style="color:#fff;"><strong>Visit:</strong> Setapak, Kuala Lumpur</div>
   </div>
 </section>
+<style>
+.eq-err { display:none; color:#e53e3e; font-size:0.8rem; margin-top:0.3rem; font-weight:500; }
+.eq-err.show { display:block; }
+.eq-input-err { border-color:#e53e3e !important; }
+</style>
 <script>
 var APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzS3xhzkxroq1okwihzPhcXIaHwIVoUxwwKgc3eyUDym-xBMPqqQ3Rwp29rT8FlSZAmNQ/exec';
+function eqShowErr(inputId, errId, msg) {
+  var inp = document.getElementById(inputId);
+  var err = document.getElementById(errId);
+  if (inp) inp.classList.add('eq-input-err');
+  if (err) { err.textContent = msg; err.classList.add('show'); }
+}
+function eqClearErr(inputId, errId) {
+  var inp = document.getElementById(inputId);
+  var err = document.getElementById(errId);
+  if (inp) inp.classList.remove('eq-input-err');
+  if (err) err.classList.remove('show');
+}
 function submitEq(e){
   e.preventDefault();
-  var n=document.getElementById("eq-name").value.trim(),
-      em=document.getElementById("eq-email").value.trim(),
-      ph=document.getElementById("eq-phone").value.trim(),
-      mg=document.getElementById("eq-msg").value.trim();
-  if(!n||!em||!ph||!mg){alert("Please fill in all required fields.");return;}
+  var ok = true;
+  var n  = document.getElementById('eq-name').value.trim();
+  var em = document.getElementById('eq-email').value.trim();
+  var ph = document.getElementById('eq-phone').value.trim();
+  var mg = document.getElementById('eq-msg').value.trim();
+
+  if (!n) { eqShowErr('eq-name','eq-name-err','Please enter your full name.'); ok=false; }
+  else if (/\d/.test(n)) { eqShowErr('eq-name','eq-name-err','Name cannot contain numbers.'); ok=false; }
+  else if (n.length < 3) { eqShowErr('eq-name','eq-name-err','Name must be at least 3 characters.'); ok=false; }
+  else eqClearErr('eq-name','eq-name-err');
+
+  if (!em) { eqShowErr('eq-email','eq-email-err','Please enter your email address.'); ok=false; }
+  else if (!/^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/.test(em)) { eqShowErr('eq-email','eq-email-err','Please enter a valid email (e.g. ahmad@email.com).'); ok=false; }
+  else eqClearErr('eq-email','eq-email-err');
+
+  if (!ph) { eqShowErr('eq-phone','eq-phone-err','Please enter your phone number.'); ok=false; }
+  else { var c=ph.replace(/[\s\-\(\)\+]/g,''); if(!/^(0|60)?1[0-9]{8,9}$/.test(c)){ eqShowErr('eq-phone','eq-phone-err','Enter a valid Malaysian mobile number (e.g. 012-345 6789).'); ok=false; } else eqClearErr('eq-phone','eq-phone-err'); }
+
+  if (!mg) { eqShowErr('eq-msg','eq-msg-err','Please enter your message.'); ok=false; }
+  else eqClearErr('eq-msg','eq-msg-err');
+
+  if (!ok) {
+    var first = document.querySelector('.eq-err.show');
+    if (first) first.scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
   var btn=e.target.querySelector('button[type="submit"]');
   if(btn){btn.disabled=true;btn.textContent='Sending…';}
   fetch(APPS_SCRIPT_URL,{
