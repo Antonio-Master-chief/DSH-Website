@@ -1398,6 +1398,9 @@ main { flex: 1 0 auto; }
 .form-submit-btn:hover svg{transform:translateX(4px);}
 .form-note{font-size:.82rem;color:#7a7f95;line-height:1.5;}
 @media(max-width:900px){.form-hero{padding:2.5rem 1.5rem 3rem;}.form-section{padding:2.5rem 1rem 3.5rem;}.form-card{padding:2rem 1.5rem;}.form-row{grid-template-columns:1fr;}}
+.form-field-error{display:none;color:#e53e3e;font-size:.82rem;margin-top:.35rem;font-weight:500;}
+.form-field-error.show{display:block;}
+.form-input.has-error,.form-select.has-error{border-color:#e53e3e!important;box-shadow:0 0 0 3px rgba(229,62,62,.12)!important;}
 </style>
 
 
@@ -1419,11 +1422,13 @@ main { flex: 1 0 auto; }
       <div class="form-row">
         <div class="form-group">
           <label class="form-label" for="full-name">Full Name <span class="req">*</span></label>
-          <input class="form-input" type="text" id="full-name" name="full_name" placeholder="As per IC / Passport" required>
+          <input class="form-input" type="text" id="full-name" name="full_name" placeholder="As per IC / Passport" required oninput="acmClearErr('err-name','full-name')">
+          <p class="form-field-error" id="err-name"></p>
         </div>
         <div class="form-group">
           <label class="form-label" for="email">Email Address <span class="req">*</span></label>
-          <input class="form-input" type="email" id="email" name="email" placeholder="your@email.com" required>
+          <input class="form-input" type="email" id="email" name="email" placeholder="your@email.com" required oninput="acmClearErr('err-email','email')">
+          <p class="form-field-error" id="err-email"></p>
         </div>
       </div>
 
@@ -1440,10 +1445,12 @@ main { flex: 1 0 auto; }
               <label for="female"><span class="radio-dot"></span>Female</label>
             </div>
           </div>
+          <p class="form-field-error" id="err-gender"></p>
         </div>
         <div class="form-group">
           <label class="form-label" for="phone">Phone Number <span class="req">*</span></label>
-          <input class="form-input" type="tel" id="phone" name="phone" placeholder="+60 12-345 6789" required>
+          <input class="form-input" type="tel" id="phone" name="phone" placeholder="+60 12-345 6789" required oninput="acmClearErr('err-phone','phone')">
+          <p class="form-field-error" id="err-phone"></p>
         </div>
       </div>
 
@@ -1460,17 +1467,19 @@ main { flex: 1 0 auto; }
             <input type="radio" id="international" name="student_type" value="International">
             <label for="international"><span class="radio-dot"></span>International</label>
           </div>
+          <p class="form-field-error" id="err-type"></p>
         </div>
       </div>
 
       <div class="form-group conditional-field" id="field-ic">
         <label class="form-label" for="ic-number">IC Number (MyKad) <span class="req">*</span></label>
-        <input class="form-input" type="text" id="ic-number" name="ic_number" placeholder="e.g. 990101-14-5678">
+        <input class="form-input" type="text" id="ic-number" name="ic_number" placeholder="e.g. 990101-14-5678" oninput="acmClearErr('err-id','ic-number')">
+        <p class="form-field-error" id="err-id"></p>
       </div>
 
       <div class="form-group conditional-field" id="field-passport">
         <label class="form-label" for="passport-number">Passport Number <span class="req">*</span></label>
-        <input class="form-input" type="text" id="passport-number" name="passport_number" placeholder="e.g. A12345678">
+        <input class="form-input" type="text" id="passport-number" name="passport_number" placeholder="e.g. A12345678" oninput="acmClearErr('err-id','passport-number')">
       </div>
 
       <div class="form-section-label">Academic Information</div>
@@ -1478,7 +1487,7 @@ main { flex: 1 0 auto; }
       <div class="form-row">
         <div class="form-group">
           <label class="form-label" for="programme">Programme Studying <span class="req">*</span></label>
-          <select class="form-select" id="programme" name="programme" required>
+          <select class="form-select" id="programme" name="programme" required onchange="acmClearErr('err-programme','programme')">
             <option value="" disabled selected>Select your programme</option>
             <optgroup label="Diploma - Allied Health Sciences">
               <option>Diploma in Nursing</option>
@@ -1507,10 +1516,12 @@ main { flex: 1 0 auto; }
               <option>SKM - Post-Natal Care</option>
             </optgroup>
           </select>
+          <p class="form-field-error" id="err-programme"></p>
         </div>
         <div class="form-group">
           <label class="form-label" for="move-in">Expected Move-in Date <span class="req">*</span></label>
-          <input class="form-input" type="date" id="move-in" name="move_in_date" required>
+          <input class="form-input" type="date" id="move-in" name="move_in_date" required oninput="acmClearErr('err-movein','move-in')">
+          <p class="form-field-error" id="err-movein"></p>
         </div>
       </div>
 
@@ -1747,6 +1758,18 @@ main { flex: 1 0 auto; }
 
 
 <script>
+// Validation helpers
+function acmShowErr(errId, inputId, msg) {
+  var err = document.getElementById(errId);
+  if (err) { err.textContent = msg; err.classList.add('show'); }
+  if (inputId) { var inp = document.getElementById(inputId); if (inp) inp.classList.add('has-error'); }
+}
+function acmClearErr(errId, inputId) {
+  var err = document.getElementById(errId);
+  if (err) err.classList.remove('show');
+  if (inputId) { var inp = document.getElementById(inputId); if (inp) inp.classList.remove('has-error'); }
+}
+
 // Show/hide IC or Passport based on student type
 document.querySelectorAll('input[name="student_type"]').forEach(function(radio) {
   radio.addEventListener('change', function() {
@@ -1759,7 +1782,14 @@ document.querySelectorAll('input[name="student_type"]').forEach(function(radio) 
       ic.classList.remove('visible');
       pp.classList.add('visible');
     }
+    acmClearErr('err-type', null);
+    acmClearErr('err-id', 'ic-number');
+    acmClearErr('err-id', 'passport-number');
   });
+});
+
+document.querySelectorAll('input[name="gender"]').forEach(function(radio) {
+  radio.addEventListener('change', function() { acmClearErr('err-gender', null); });
 });
 
 // Accommodation form submission
@@ -1773,14 +1803,65 @@ document.getElementById('acm-form').addEventListener('submit', function(e) {
   var moveIn      = document.getElementById('move-in').value;
   var genderEl    = document.querySelector('input[name="gender"]:checked');
   var typeEl      = document.querySelector('input[name="student_type"]:checked');
-  var gender      = genderEl   ? genderEl.value   : '';
-  var studentType = typeEl     ? typeEl.value      : '';
+  var gender      = genderEl ? genderEl.value : '';
+  var studentType = typeEl   ? typeEl.value   : '';
   var idNumber    = studentType === 'Local'
                     ? document.getElementById('ic-number').value.trim()
                     : document.getElementById('passport-number').value.trim();
+  var idInputId   = studentType === 'Local' ? 'ic-number' : 'passport-number';
 
-  if (!name || !email || !phone || !gender || !studentType || !idNumber || !programme || !moveIn) {
-    alert('Please fill in all required fields.');
+  var ok = true;
+
+  // Name
+  if (!name) { acmShowErr('err-name', 'full-name', 'Please enter your full name.'); ok = false; }
+  else if (/\d/.test(name)) { acmShowErr('err-name', 'full-name', 'Name cannot contain numbers.'); ok = false; }
+  else if (name.length < 3) { acmShowErr('err-name', 'full-name', 'Name must be at least 3 characters.'); ok = false; }
+  else acmClearErr('err-name', 'full-name');
+
+  // Email
+  if (!email) { acmShowErr('err-email', 'email', 'Please enter your email address.'); ok = false; }
+  else if (!/^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/.test(email)) { acmShowErr('err-email', 'email', 'Please enter a valid email (e.g. ahmad@email.com).'); ok = false; }
+  else acmClearErr('err-email', 'email');
+
+  // Gender
+  if (!gender) { acmShowErr('err-gender', null, 'Please select your gender.'); ok = false; }
+  else acmClearErr('err-gender', null);
+
+  // Phone
+  if (!phone) { acmShowErr('err-phone', 'phone', 'Please enter your phone number.'); ok = false; }
+  else { var c = phone.replace(/[\s\-\(\)\+]/g,''); if (!/^(0|60)?1[0-9]{8,9}$/.test(c)) { acmShowErr('err-phone', 'phone', 'Enter a valid Malaysian mobile number (e.g. 012-345 6789).'); ok = false; } else acmClearErr('err-phone', 'phone'); }
+
+  // Student type
+  if (!studentType) { acmShowErr('err-type', null, 'Please select Local or International.'); ok = false; }
+  else acmClearErr('err-type', null);
+
+  // IC / Passport
+  if (studentType && !idNumber) {
+    var idLabel = studentType === 'Local' ? 'IC number (MyKad)' : 'passport number';
+    acmShowErr('err-id', idInputId, 'Please enter your ' + idLabel + '.');
+    ok = false;
+  } else if (studentType) {
+    if (studentType === 'Local') {
+      var icClean = idNumber.replace(/-/g,'');
+      if (!/^\d{12}$/.test(icClean)) { acmShowErr('err-id', idInputId, 'IC (MyKad) must be 12 digits — e.g. 990101-14-5678.'); ok = false; }
+      else acmClearErr('err-id', idInputId);
+    } else {
+      if (!/^[A-Za-z0-9]{6,12}$/.test(idNumber)) { acmShowErr('err-id', idInputId, 'Passport must be 6–12 alphanumeric characters (e.g. A12345678).'); ok = false; }
+      else acmClearErr('err-id', idInputId);
+    }
+  }
+
+  // Programme
+  if (!programme) { acmShowErr('err-programme', 'programme', 'Please select your programme.'); ok = false; }
+  else acmClearErr('err-programme', 'programme');
+
+  // Move-in date
+  if (!moveIn) { acmShowErr('err-movein', 'move-in', 'Please select your expected move-in date.'); ok = false; }
+  else { var d = new Date(moveIn); if (d < new Date(new Date().toDateString())) { acmShowErr('err-movein', 'move-in', 'Move-in date cannot be in the past.'); ok = false; } else acmClearErr('err-movein', 'move-in'); }
+
+  if (!ok) {
+    var first = document.querySelector('.form-field-error.show');
+    if (first) first.scrollIntoView({behavior:'smooth', block:'center'});
     return;
   }
 
