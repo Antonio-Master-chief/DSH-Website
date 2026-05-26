@@ -51,7 +51,7 @@ var ENR_HEADERS = [
   '#','Timestamp','Full Name','Email','Phone','ID Type','ID Number',
   'Date of Birth','Nationality','Programme','Education Level',
   'Heard About Us','Message','Student Type',
-  'Health Declaration (Drive)','Registration Form (Drive)',
+  'Health Dec','Reg Form',
   'Status','Admin Notes','Date Checked'
 ];
 var ENQ_HEADERS = [
@@ -85,26 +85,26 @@ function processEnrollment(data) {
   var ts    = Utilities.formatDate(new Date(), 'Asia/Kuala_Lumpur', 'dd/MM/yyyy HH:mm:ss');
   var rowNum = sheet.getLastRow(); // row number = rows already present (header counts as 1)
 
-  var safeName   = (data.fullName || 'Student').replace(/[^A-Za-z0-9 ]/g, '').replace(/\s+/g, '_');
-  var healthLink = '';
-  var regLink    = '';
-  var hasDrive   = CONFIG.DRIVE_FOLDER_ID && CONFIG.DRIVE_FOLDER_ID.indexOf('PASTE') === -1;
+  var safeName        = (data.fullName || 'Student').replace(/[^A-Za-z0-9 ]/g, '').replace(/\s+/g, '_');
+  var hasDrive        = CONFIG.DRIVE_FOLDER_ID && CONFIG.DRIVE_FOLDER_ID.indexOf('PASTE') === -1;
+  var healthUploaded  = !!(data.healthFile && data.healthFile.content);
+  var regUploaded     = !!(data.regFile    && data.regFile.content);
 
   if (hasDrive) {
     var folder = DriveApp.getFolderById(CONFIG.DRIVE_FOLDER_ID);
-    if (data.healthFile && data.healthFile.content) {
-      healthLink = folder.createFile(Utilities.newBlob(
+    if (healthUploaded) {
+      folder.createFile(Utilities.newBlob(
         Utilities.base64Decode(data.healthFile.content),
         data.healthFile.mimeType,
         safeName + '_HealthDeclaration.' + data.healthFile.ext
-      )).getUrl();
+      ));
     }
-    if (data.regFile && data.regFile.content) {
-      regLink = folder.createFile(Utilities.newBlob(
+    if (regUploaded) {
+      folder.createFile(Utilities.newBlob(
         Utilities.base64Decode(data.regFile.content),
         data.regFile.mimeType,
         safeName + '_RegistrationForm.' + data.regFile.ext
-      )).getUrl();
+      ));
     }
   }
 
@@ -123,14 +123,18 @@ function processEnrollment(data) {
     data.source      || 'Not specified',
     data.message     || '',
     data.nationality === 'Malaysian' ? 'Local' : 'International',
-    healthLink,
-    regLink,
+    healthUploaded,
+    regUploaded,
     'Pending', '', ''
   ]);
 
-  styleStatusCell(sheet, sheet.getLastRow(), 17); // col Q = Status
+  var newRow   = sheet.getLastRow();
+  var cbRule   = SpreadsheetApp.newDataValidation().requireCheckbox().build();
+  sheet.getRange(newRow, 15).setDataValidation(cbRule);
+  sheet.getRange(newRow, 16).setDataValidation(cbRule);
+  styleStatusCell(sheet, newRow, 17); // col Q = Status
 
-  var sheetUrl     = 'https://docs.google.com/spreadsheets/d/' + CONFIG.ENROLLMENT_SPREADSHEET_ID;
+  var sheetUrl       = 'https://docs.google.com/spreadsheets/d/' + CONFIG.ENROLLMENT_SPREADSHEET_ID;
   var driveFolderUrl = hasDrive ? 'https://drive.google.com/drive/folders/' + CONFIG.DRIVE_FOLDER_ID : '';
   sendWhatsApp('📋 *NEW ENROLMENT — DIT*\n────────────────────\n' +
     '👤 ' + (data.fullName || '') + '\n📧 ' + (data.email || '') + '\n📱 ' + (data.phone || '') +
@@ -295,9 +299,13 @@ function setupEnrollmentSheet() {
   // Column widths: #, Timestamp, Name, Email, Phone, IDType, IDNum, DOB, Nationality,
   //   Programme, EduLevel, HeardAbout, Message, StudentType, HealthDec, RegForm,
   //   Status, AdminNotes, DateChecked
-  var w = [45,150,180,210,120,80,140,110,110, 280,140,160,270,100,220,220, 110,240,120];
+  var w = [45,150,180,210,120,80,140,110,110, 280,140,160,270,100,80,80, 110,240,120];
   w.forEach(function(width, i) { sh.setColumnWidth(i+1, width); });
-  Logger.log('Enrollment sheet headers and widths updated!');
+  // Apply checkbox validation to Health Dec (col 15) and Reg Form (col 16), rows 2–1000
+  var cbRule = SpreadsheetApp.newDataValidation().requireCheckbox().build();
+  sh.getRange(2, 15, 999).setDataValidation(cbRule);
+  sh.getRange(2, 16, 999).setDataValidation(cbRule);
+  Logger.log('Enrollment sheet headers, widths, and checkbox columns updated!');
 }
 
 function setupEnquirySheet() {
@@ -334,6 +342,18 @@ function setupAccommodationSheet() {
   var w = [45,150,180,210,120,80,110,140, 280,120, 110,240,120];
   w.forEach(function(width, i) { sh.setColumnWidth(i+1, width); });
   Logger.log('Accommodation sheet headers and widths updated!');
+}
+
+// ── Data management — run from script editor ────────────────────
+
+function clearEnrollmentData() {
+  var ss    = SpreadsheetApp.openById(CONFIG.ENROLLMENT_SPREADSHEET_ID);
+  var sheet = ss.getSheetByName('Enrollments');
+  if (!sheet) { Logger.log('No Enrollments tab found.'); return; }
+  var lastRow = sheet.getLastRow();
+  if (lastRow < 2) { Logger.log('Sheet is already empty.'); return; }
+  sheet.deleteRows(2, lastRow - 1);
+  Logger.log('Cleared ' + (lastRow - 1) + ' data rows. Header row kept.');
 }
 
 // ── Accommodation diagnostics — run from script editor ──────────
