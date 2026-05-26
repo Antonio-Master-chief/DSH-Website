@@ -2507,7 +2507,6 @@ function handleSubmit(e) {
 
   var payload = {
     type:        'enrollment',
-    leadSource:  'Web',
     fullName:    document.getElementById('fullName').value.trim(),
     email:       document.getElementById('email').value.trim(),
     phone:       document.getElementById('phone').value.trim(),
@@ -2523,8 +2522,7 @@ function handleSubmit(e) {
 
   function postToSheets() {
     var urlPayload = {
-      type: payload.type, leadSource: payload.leadSource,
-      fullName: payload.fullName, email: payload.email,
+      type: payload.type, fullName: payload.fullName, email: payload.email,
       phone: payload.phone, idType: payload.idType, idNumber: payload.idNumber,
       dob: payload.dob, nationality: payload.nationality, programme: payload.programme,
       education: payload.education, source: payload.source, message: payload.message
