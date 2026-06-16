@@ -1258,6 +1258,69 @@ main { flex: 1 0 auto; }
   .goc-name { font-size: .76rem; }
 }
 
+/* ─── HIERARCHY ACCORDION ─── */
+.hc-split {
+  display:flex; gap:2rem; padding-top:44px;
+  justify-content:center; align-items:flex-start;
+  position:relative;
+}
+.hc-split::before {
+  content:''; position:absolute; top:0;
+  left:20%; right:20%; height:2px;
+  background:linear-gradient(90deg,transparent,rgba(58,64,214,.65),rgba(138,144,255,.45),transparent);
+}
+.hc-branch {
+  flex:1; max-width:520px;
+  display:flex; flex-direction:column; align-items:center;
+  position:relative;
+}
+.hc-branch::before {
+  content:''; position:absolute; top:-44px; left:50%;
+  transform:translateX(-50%); width:2px; height:44px;
+  background:linear-gradient(180deg,rgba(138,144,255,.35),rgba(58,64,214,.85));
+}
+.hc-acc-list { width:100%; margin-top:1.2rem; }
+.hc-acc-item {
+  border:1.5px solid #dde0f5; border-radius:14px;
+  margin-bottom:.6rem; overflow:hidden;
+}
+.hc-acc-header {
+  width:100%; display:flex; align-items:center; gap:.7rem;
+  padding:.7rem 1rem; background:#f4f5ff;
+  border:none; cursor:pointer; text-align:left;
+  transition:background .2s;
+}
+.hc-acc-header:hover { background:#eceeff; }
+.hc-acc-role {
+  font-size:.61rem; font-weight:700; text-transform:uppercase;
+  letter-spacing:.08em; color:#3a40d6;
+  background:#e8eaff; padding:.22em .65em; border-radius:999px;
+  white-space:normal; line-height:1.4; flex-shrink:0;
+}
+.hc-acc-name {
+  font-family:'Fraunces',serif; font-weight:700;
+  font-size:.86rem; color:#0c1044; flex:1; line-height:1.3;
+}
+.hc-chevron {
+  width:18px; height:18px; color:#5159ea;
+  stroke:currentColor; fill:none; stroke-width:2.5;
+  transition:transform .25s; flex-shrink:0;
+}
+.hc-acc-item.open .hc-chevron { transform:rotate(180deg); }
+.hc-acc-body { display:none; padding:1.2rem 1rem; background:#fff; }
+.hc-acc-item.open .hc-acc-body { display:block; }
+.hc-hods {
+  display:flex; flex-wrap:wrap; gap:.75rem;
+  margin-top:1.1rem; justify-content:center;
+}
+.hc-acc-body .goc-role { white-space:normal; line-height:1.4; letter-spacing:.04em; }
+.hc-vacant { font-style:italic; color:#9098cc !important; }
+@media(max-width:900px){
+  .hc-split { flex-direction:column; align-items:center; padding-top:1rem; }
+  .hc-split::before,.hc-branch::before { display:none; }
+  .hc-branch { max-width:100%; width:100%; }
+}
+
 </style>
 </head>
 <body>
@@ -1455,50 +1518,256 @@ main { flex: 1 0 auto; }
         <h3 class="goc-name">Yuliana Syahrial</h3>
       </div>
 
-      <!-- Level 2: Management Team -->
-      <div class="goc-children">
-        <div class="goc-child">
-          <div class="goc-card">
-            <div class="goc-avatar"><img src="Tan%20Sri%20Dato%20Dr%20Mohamed%20Saleh%20Mohammed%20Yassin.png" alt="Tan Sri Dato Dr Mohammed Salleh Mohammed Yasin"></div>
-            <span class="goc-role">Member</span>
-            <h3 class="goc-name">Tan Sri Dato Dr Mohammed Salleh Mohammed Yasin</h3>
-          </div>
-        </div>
-        <div class="goc-child">
-          <div class="goc-card">
-            <div class="goc-avatar"><img src="Rozza%20Elena.png" alt="Rozza Elena Rosli"></div>
-            <span class="goc-role">Secretary</span>
-            <h3 class="goc-name">Rozza Elena Rosli</h3>
-          </div>
-        </div>
-        <div class="goc-child">
-          <div class="goc-card">
-            <div class="goc-avatar"><img src="Keeran%20Sittampalam.png" alt="Keeran Charles Sittampalam"></div>
-            <span class="goc-role">Treasurer</span>
-            <h3 class="goc-name">Keeran Charles Sittampalam</h3>
-          </div>
-        </div>
-        <div class="goc-child">
+      <!-- Level 2: Two-branch hierarchy -->
+      <div class="hc-split">
+
+        <!-- ── LEFT: Academic ── -->
+        <div class="hc-branch">
           <div class="goc-card">
             <div class="goc-avatar"><img src="rishal.png" alt="Rishal Kumaran Ramasamy"></div>
             <span class="goc-role">Academic</span>
             <h3 class="goc-name">Rishal Kumaran Ramasamy</h3>
           </div>
-        </div>
-        <div class="goc-child">
-          <div class="goc-card">
-            <div class="goc-avatar"><img src="Wan%20Khairanie%20Wan%20Nilam.png" alt="Wan Khairanie Wan Nilam"></div>
-            <span class="goc-role">HR</span>
-            <h3 class="goc-name">Wan Khairanie Wan Nilam</h3>
+
+          <div class="hc-acc-list">
+
+            <!-- Dean 1: Habidah Isa -->
+            <div class="hc-acc-item">
+              <button class="hc-acc-header" onclick="hcToggle(this)" aria-expanded="false">
+                <span class="hc-acc-role">Dean of Nursing</span>
+                <span class="hc-acc-name">Habidah Isa</span>
+                <svg class="hc-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="hc-acc-body">
+                <div style="display:flex;justify-content:center;">
+                  <div class="goc-card">
+                    <div class="goc-avatar"><img src="Habidah%20Binti%20Isa.png" alt="Habidah Isa"></div>
+                    <span class="goc-role">Dean of Nursing</span>
+                    <h3 class="goc-name">Habidah Isa</h3>
+                  </div>
+                </div>
+                <div class="hc-hods">
+                  <div class="goc-card">
+                    <div class="goc-avatar"></div>
+                    <span class="goc-role">Diploma in Nursing</span>
+                    <h3 class="goc-name">Nuradiah Kumarudin</h3>
+                  </div>
+                  <div class="goc-card">
+                    <div class="goc-avatar"><img src="Siti%20Nur%20Baizura.png" alt="Siti Nur Baizura Ab. Razak"></div>
+                    <span class="goc-role">Post Basic Infection Control</span>
+                    <h3 class="goc-name">Siti Nur Baizura Ab. Razak</h3>
+                  </div>
+                  <div class="goc-card">
+                    <div class="goc-avatar"><img src="Habidah%20Binti%20Isa.png" alt="Habidah Isa"></div>
+                    <span class="goc-role">Post Basic Peri Operative</span>
+                    <h3 class="goc-name">Habidah Isa</h3>
+                  </div>
+                  <div class="goc-card">
+                    <div class="goc-avatar"></div>
+                    <span class="goc-role">Certificate in Asst. Nurse</span>
+                    <h3 class="goc-name">Siti Munirah Mustaffa</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dean 2: Norhaslinda Zainal @ Mohd Nor -->
+            <div class="hc-acc-item">
+              <button class="hc-acc-header" onclick="hcToggle(this)" aria-expanded="false">
+                <span class="hc-acc-role">Dean of TVET</span>
+                <span class="hc-acc-name">Norhaslinda Zainal @ Mohd Nor</span>
+                <svg class="hc-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="hc-acc-body">
+                <div style="display:flex;justify-content:center;">
+                  <div class="goc-card">
+                    <div class="goc-avatar"></div>
+                    <span class="goc-role">Dean of TVET</span>
+                    <h3 class="goc-name">Norhaslinda Zainal @ Mohd Nor</h3>
+                  </div>
+                </div>
+                <div class="hc-hods">
+                  <div class="goc-card">
+                    <div class="goc-avatar"></div>
+                    <span class="goc-role">Post Natal Care</span>
+                    <h3 class="goc-name">Noreen Kamsani</h3>
+                  </div>
+                  <div class="goc-card">
+                    <div class="goc-avatar"></div>
+                    <span class="goc-role">Elderly Care</span>
+                    <h3 class="goc-name">Wan Mastura Wan Mustapha</h3>
+                  </div>
+                  <div class="goc-card">
+                    <div class="goc-avatar"><img src="UMI%20RAIHANA.png" alt="Umi Raihana Abdul Rahman"></div>
+                    <span class="goc-role">Pest Control Operation</span>
+                    <h3 class="goc-name">Umi Raihana Abdul Rahman</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dean 3: Mohamad Hafizuddin Mohd Pauzi -->
+            <div class="hc-acc-item">
+              <button class="hc-acc-header" onclick="hcToggle(this)" aria-expanded="false">
+                <span class="hc-acc-role">Dean of Managerial Science &amp; Hospitality</span>
+                <span class="hc-acc-name">Mohamad Hafizuddin Mohd Pauzi</span>
+                <svg class="hc-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="hc-acc-body">
+                <div style="display:flex;justify-content:center;">
+                  <div class="goc-card">
+                    <div class="goc-avatar"><img src="Mohamad%20Hafizuddin%20Bin%20Mohd%20Pauzi.png" alt="Mohamad Hafizuddin Mohd Pauzi"></div>
+                    <span class="goc-role">Dean of Managerial Science &amp; Hospitality</span>
+                    <h3 class="goc-name">Mohamad Hafizuddin Mohd Pauzi</h3>
+                  </div>
+                </div>
+                <div class="hc-hods">
+                  <div class="goc-card">
+                    <div class="goc-avatar"><img src="Hotel%26Tourism.png" alt="Hotel &amp; Tourism"></div>
+                    <span class="goc-role">Hotel &amp; Tourism</span>
+                    <h3 class="goc-name hc-vacant">Vacant</h3>
+                  </div>
+                  <div class="goc-card">
+                    <div class="goc-avatar"><img src="BussinessAdministration.png" alt="Business Administration"></div>
+                    <span class="goc-role">Business Administration</span>
+                    <h3 class="goc-name hc-vacant">Vacant</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dean 4: Rishal Kumaran Ramasamy -->
+            <div class="hc-acc-item">
+              <button class="hc-acc-header" onclick="hcToggle(this)" aria-expanded="false">
+                <span class="hc-acc-role">Dean of Allied Health Sciences</span>
+                <span class="hc-acc-name">Rishal Kumaran Ramasamy</span>
+                <svg class="hc-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="hc-acc-body">
+                <div style="display:flex;justify-content:center;">
+                  <div class="goc-card">
+                    <div class="goc-avatar"><img src="rishal.png" alt="Rishal Kumaran Ramasamy"></div>
+                    <span class="goc-role">Dean of Allied Health Sciences</span>
+                    <h3 class="goc-name">Rishal Kumaran Ramasamy</h3>
+                  </div>
+                </div>
+                <div class="hc-hods">
+                  <div class="goc-card">
+                    <div class="goc-avatar"><img src="Ain%20Syazana%20Zolkepli.png" alt="Ain Syazana Zolkepli"></div>
+                    <span class="goc-role">Medical Imaging</span>
+                    <h3 class="goc-name">Ain Syazana Zolkepli</h3>
+                  </div>
+                  <div class="goc-card">
+                    <div class="goc-avatar"><img src="UMI%20RAIHANA.png" alt="Umi Raihana"></div>
+                    <span class="goc-role">Environmental Health</span>
+                    <h3 class="goc-name">Umi Raihana</h3>
+                  </div>
+                  <div class="goc-card">
+                    <div class="goc-avatar"><img src="NURSHAFIRA.png" alt="Nur Shafira Sabri"></div>
+                    <span class="goc-role">Occupational Safety &amp; Health</span>
+                    <h3 class="goc-name">Nur Shafira Sabri</h3>
+                  </div>
+                  <div class="goc-card">
+                    <div class="goc-avatar"><img src="Premavathi%20Thirumoorthy.png" alt="Premavathi Thirumoorthi"></div>
+                    <span class="goc-role">Pharmacy</span>
+                    <h3 class="goc-name">Premavathi Thirumoorthi</h3>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
-        <div class="goc-child">
+
+        <!-- ── RIGHT: Registrar ── -->
+        <div class="hc-branch">
           <div class="goc-card">
-            <div class="goc-avatar"><img src="Mechiel%20Alpha.png" alt="Mechiel Alpha"></div>
-            <span class="goc-role" style="white-space:normal;line-height:1.5;letter-spacing:0.02em;">Student Record<br>&amp; Marketing</span>
-            <h3 class="goc-name">Mechiel Alpha</h3>
+            <div class="goc-avatar"><img src="Rozza%20Elena.png" alt="Rozza Elena Rosli"></div>
+            <span class="goc-role">Registrar</span>
+            <h3 class="goc-name">Rozza Elena Rosli</h3>
+          </div>
+
+          <div class="hc-acc-list">
+
+            <!-- AR 1: Hairolbariah Haron -->
+            <div class="hc-acc-item">
+              <button class="hc-acc-header" onclick="hcToggle(this)" aria-expanded="false">
+                <span class="hc-acc-role">Exam Unit</span>
+                <span class="hc-acc-name">Hairolbariah Haron</span>
+                <svg class="hc-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="hc-acc-body">
+                <div style="display:flex;justify-content:center;">
+                  <div class="goc-card">
+                    <div class="goc-avatar"></div>
+                    <span class="goc-role">Asst. Registrar</span>
+                    <h3 class="goc-name">Hairolbariah Haron</h3>
+                    <p class="goc-dept">Exam Unit</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- AR 2: Mohammad Izzat Faiz Kumuradin -->
+            <div class="hc-acc-item">
+              <button class="hc-acc-header" onclick="hcToggle(this)" aria-expanded="false">
+                <span class="hc-acc-role">Student Affairs</span>
+                <span class="hc-acc-name">Mohammad Izzat Faiz Kumuradin</span>
+                <svg class="hc-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="hc-acc-body">
+                <div style="display:flex;justify-content:center;">
+                  <div class="goc-card">
+                    <div class="goc-avatar"></div>
+                    <span class="goc-role">Asst. Registrar</span>
+                    <h3 class="goc-name">Mohammad Izzat Faiz Kumuradin</h3>
+                    <p class="goc-dept">Student Affairs</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- AR 3: Vacant — Admission & Student Record -->
+            <div class="hc-acc-item">
+              <button class="hc-acc-header" onclick="hcToggle(this)" aria-expanded="false">
+                <span class="hc-acc-role">Admission &amp; Student Record</span>
+                <span class="hc-acc-name hc-vacant">Vacant</span>
+                <svg class="hc-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="hc-acc-body">
+                <div style="display:flex;justify-content:center;">
+                  <div class="goc-card">
+                    <div class="goc-avatar"><img src="Admission%26Studentrecord.png" alt="Admission &amp; Student Record"></div>
+                    <span class="goc-role">Asst. Registrar</span>
+                    <h3 class="goc-name hc-vacant">Vacant</h3>
+                    <p class="goc-dept">Admission &amp; Student Record</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- AR 4: Vacant — Sponsorship -->
+            <div class="hc-acc-item">
+              <button class="hc-acc-header" onclick="hcToggle(this)" aria-expanded="false">
+                <span class="hc-acc-role">Sponsorship</span>
+                <span class="hc-acc-name hc-vacant">Vacant</span>
+                <svg class="hc-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+              </button>
+              <div class="hc-acc-body">
+                <div style="display:flex;justify-content:center;">
+                  <div class="goc-card">
+                    <div class="goc-avatar"><img src="Sponsorship.png" alt="Sponsorship"></div>
+                    <span class="goc-role">Asst. Registrar</span>
+                    <h3 class="goc-name hc-vacant">Vacant</h3>
+                    <p class="goc-dept">Sponsorship</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
+
       </div>
 
     </div>
@@ -1693,6 +1962,12 @@ main { flex: 1 0 auto; }
     });
   }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
   document.querySelectorAll('[data-reveal], [data-reveal-stagger]').forEach(el => io.observe(el));
+  function hcToggle(btn){
+    var item=btn.closest('.hc-acc-item');
+    var isOpen=item.classList.contains('open');
+    item.classList.toggle('open',!isOpen);
+    btn.setAttribute('aria-expanded',!isOpen);
+  }
 </script>
 
 </body>
